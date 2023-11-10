@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/rh-admin/static/css/main.b7d005fd.css",
-    "main.js": "/rh-admin/static/js/main.9f2e504a.js",
-    "index.html": "/rh-admin/index.html",
-    "main.b7d005fd.css.map": "/rh-admin/static/css/main.b7d005fd.css.map",
-    "main.9f2e504a.js.map": "/rh-admin/static/js/main.9f2e504a.js.map"
+    "main.css": "/rj-admin/static/css/main.b7d005fd.css",
+    "main.js": "/rj-admin/static/js/main.9f2e504a.js",
+    "index.html": "/rj-admin/index.html",
+    "main.b7d005fd.css.map": "/rj-admin/static/css/main.b7d005fd.css.map",
+    "main.9f2e504a.js.map": "/rj-admin/static/js/main.9f2e504a.js.map"
   },
   "entrypoints": [
     "static/css/main.b7d005fd.css",
