@@ -53,7 +53,7 @@ const AddPuzzle = () => {
    try {
       const response = await axios({
         method: "post",
-        url: PUZZLE_API.add,
+        url: PUZZLE_API.createPuzzle,
         headers: {
           Authorization: cookies["token"],
         },
@@ -73,9 +73,9 @@ const AddPuzzle = () => {
         answer: "",
       });
 
-      if (response.status === 200) navigate("/puzzle/manage");
+      if (response.status === 201) navigate("/puzzle/manage");
     } catch (e) {
-      console.log(e, e.response.data);
+      console.log(e, e.response);
     }
   };
 
@@ -146,12 +146,11 @@ const AddPuzzle = () => {
                           name="questionType"
                           onChange={(e) => handleChange(e)}
                           id="questionType"
-                          value={puzzleData.questionType}
                         >
-                          <option value="">Select </option>
+                          <option selected hidden value="">Select</option>
                           {questiontypes.map((elem) => {
                             return (
-                              <option key={elem} value={elem}>
+                              <option value={elem}>
                                 {elem}
                               </option>
                             );

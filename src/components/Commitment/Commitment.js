@@ -22,14 +22,32 @@ const Commitment = () => {
     (state) => state.category
   );
 
+  const fetchCommitment = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: COMMITMENT_API.getAllCommitment,
+        headers: {
+          Authorization: cookies.token,
+        },
+      });
+      if (response.status == 200) dispatch(loadCommitment(response.data));
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   const commitmentDelete = async (e, elem) => {
     try {
       const response = await axios({
         method: "delete",
         url: COMMITMENT_API.deleteCommitment + `/${elem._id}`,
+        headers: {
+          Authorization: cookies.token,
+        }
       });
       if (response.status === 200)
-        return dispatch(loadCommitment(response.data));
+       fetchCommitment();
     } catch (error) {
       console.log(error, error.response);
     }
@@ -48,21 +66,6 @@ const Commitment = () => {
       });
       // Dispatch the data to the puzzleSlice to be stored in the store
       return dispatch(loadCategory(response.data));
-    } catch (e) {
-      console.warn(e);
-    }
-  };
-
-  const fetchCommitment = async () => {
-    try {
-      const response = await axios({
-        method: "get",
-        url: COMMITMENT_API.getAllCommitment,
-        headers: {
-          Authorization: cookies.token,
-        },
-      });
-      if (response.status == 200) dispatch(loadCommitment(response.data));
     } catch (e) {
       console.warn(e);
     }
@@ -90,8 +93,10 @@ const Commitment = () => {
         data: commitment,
       });
       if (response.status == 201) {
-        setCommitment({ ...commitment, suggestion_text: "" });
-        return dispatch(loadCommitment(response.data));
+        setCommitment({ ...commitment, suggestion_text: "", category_text: '' });
+        dispatch(loadCommitment(response.data));
+        fetchCommitment();
+        return;
       }
     } catch (e) {
       console.warn(e);

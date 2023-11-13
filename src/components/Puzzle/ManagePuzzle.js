@@ -10,13 +10,31 @@ function ManagePuzzle() {
   const [cookies] = useCookies(["token"]);
   const dispatch = useDispatch();
 
+  const fetchApi = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: PUZZLE_API.getAllPuzzle,
+        headers: {
+          Authorization: cookies.token,
+        },
+      });
+      if (response.status === 200) return dispatch(loadPuzzle(response.data));
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   const puzzleDelete = async (e, elem) => {
     try {
       const response = await axios({
         method: "delete",
         url: PUZZLE_API.deletePuzzle + `?id=${elem._id}`,
+        headers: {
+          Authorization:cookies.token
+        },
       });
-      if (response.status === 200) return dispatch(loadPuzzle(response.data));
+      if (response.status === 200) fetchApi(); ;
     } catch (err) {
       console.log(err, err.response);
     }
@@ -41,20 +59,6 @@ function ManagePuzzle() {
       console.warn(e)
     }
   }
-  const fetchApi = async () => {
-    try {
-      const response = await axios({
-        method: "get",
-        url: PUZZLE_API.getAllPuzzle,
-        headers: {
-          Authorization: cookies.token,
-        },
-      });
-      if (response.status === 200) return dispatch(loadPuzzle(response.data));
-    } catch (e) {
-      console.warn(e);
-    }
-  };
 
   useEffect(() => {
     fetchApi();

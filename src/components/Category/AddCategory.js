@@ -4,7 +4,7 @@ import axios from "axios";
 import { CATEGORY_API } from "../../util/api";
 import { useCookies } from "react-cookie";
 
-const AddCategory = () => {
+const AddCategory = ({setShow, fetchApi}) => {
   const [cookies] = useCookies(["token"]);
   const navigate = useNavigate();
 
@@ -37,12 +37,16 @@ const AddCategory = () => {
       });
 
       // Set the values to default and navigate to the Manage Puzzle
-      setCategoryData({
-        ...categoryData,
-        category_title: "",
-        category_description: "",
-      });
-      if (response.status === 201) return navigate("/category");
+      if (response.status === 201) {
+        alert("Category added successfully");
+        setCategoryData({
+          ...categoryData,
+          category_title: "",
+          category_description: "",
+        });
+        fetchApi();
+        setShow(false);
+      };
     } catch (e) {
       console.log(e, e.response);
     }

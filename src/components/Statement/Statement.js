@@ -22,20 +22,6 @@ const Statement = () => {
     (state) => state.category
   );
 
-  const statementDelete = async (e, elem) => {
-    try {
-      const response = await axios({
-        method: "delete",
-        url: STATEMENT_API.deleteStatment + `/${elem._id}`,
-      });
-      if (response.status === 200)
-        return dispatch(loadStatement(response.data));
-    } catch (error) {
-      console.log(error, error.response);
-    }
-  };
-
-  // Fetch All Statement
   const fetchStatement = async () => {
     try {
       const response = await axios({
@@ -50,6 +36,23 @@ const Statement = () => {
       console.warn(e);
     }
   };
+
+  const statementDelete = async (e, elem) => {
+    try {
+      const response = await axios({
+        method: "delete",
+        url: STATEMENT_API.deleteStatment + `/${elem._id}`,
+        headers: {
+          Authorization: cookies.token,
+        }
+      });
+      if (response.status === 200)
+        return fetchStatement();
+    } catch (error) {
+      console.log(error, error.response);
+    }
+  };
+
 
   const fetchCategories = async () => {
     try {
@@ -92,7 +95,7 @@ const Statement = () => {
         data: statement,
       });
       if (response.status == 201) {
-        setStatement({ ...statement, commitment_text: "" });
+        setStatement({ ...statement, suggestion_text: "", category_text: '' });
         return dispatch(loadStatement(response.data));
       }
     } catch (e) {

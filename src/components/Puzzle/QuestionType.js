@@ -77,6 +77,28 @@ const QuestionType = ({
               <div className="col-sm-6 bg-dark"></div>
             </div>
           </div>
+          <div className="d-flex flex-row justify-content-around align-items-center ">
+            <div className="form-group row mt-4 mb-4 d-flex flex-row w-50 px-md-5">
+              <label htmlFor="optionC" className="col-sm-6 col-form-label h5">
+                Answer
+              </label>
+              <select
+                type="text"
+                className="form-control w-100 border-dark"
+                style={{ borderRadius: "20px" }}
+                id="answer"
+                name="answer"
+                onChange={(e) => handleChange(e)}
+              >
+                <option selected hidden value="">Select an option</option>
+                <option value={puzzleData.optionA}>A</option>
+                <option value={puzzleData.optionA}>B</option>
+                <option value={puzzleData.optionA}>C</option>
+                <option value={puzzleData.optionA}>D</option>
+              </select>
+              <div className="col-sm-6 bg-dark"></div>
+            </div>
+          </div>
         </div>
       ) : puzzleData.questionType == 1 ? (
         // When T/F selected

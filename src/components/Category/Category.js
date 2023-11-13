@@ -120,7 +120,7 @@ const Category = () => {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-        <AddCategory />
+        <AddCategory setShow={setShow} fetchApi={fetchApi} />
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Close
