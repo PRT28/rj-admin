@@ -13,47 +13,40 @@ const App = () => {
   const [auth, setAuth] = useState(false);
   const dispatch = useDispatch();
 
-  const fetchUserDetails = async () => {
-    try {
-      const response = await axios({
-        method: "get",
-        url: DASHBOARD_API,
-        headers: {
-          Authorization: cookies.token,
-        },
-      });
-      if (response.status == 200) {
-        dispatch(loadAdmin(response.data.user));
-        // 2 means user so not allowed
-        if (response.data.user.role == 2) {
-          alert("User Sign in not allowed");
-          setAuth(false);
-        } else setAuth(true);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
-    if (!cookies["token"]) {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios({
+          method: "get",
+          url: DASHBOARD_API,
+          headers: {
+            Authorization: cookies.token,
+          },
+        });
+        if (response.status === 200) {
+          dispatch(loadAdmin(response.data.user));
+          // 2 means user so not allowed
+          if (response.data.user.role === 2) {
+            alert("User Sign in not allowed");
+            setAuth(false);
+          } else setAuth(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    console.log(cookies)
+    if (!cookies.token) {
       setAuth(false);
     } else {
       fetchUserDetails();
     }
-  }, [cookies]);
+  }, [dispatch, cookies]);
 
   return (
     <div key="app">
-      {!auth ? (
-        <div key="login">
-          <Login />
-        </div>
-      ) : (
-        <div key="routes">
-          <AppRoutes />
-        </div>
-      )}
+      {!cookies.token ?<Login /> : <AppRoutes />}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import EditData from "./EditData";
+import {AiFillDelete, AiTwotoneEdit} from 'react-icons/ai'
+
 const DataTable = ({ actualData, fields, editableFields, delete_API, action, edit_API,showData,delete_func,edit_func
 }) => {
   // Set the Data to be actual when no show data is provided
@@ -84,12 +86,12 @@ const DataTable = ({ actualData, fields, editableFields, delete_API, action, edi
                         );
                       })}
                       <td style={{ backgroundColor: "#3C8C7E99" }}>
-                         <i className="fa-solid fa-pen-to-square mx-2" onClick={(e)=> (setEdit({...edit,isEdit:true,index:index}))}></i>  
-                        <i
+                         <AiTwotoneEdit className="fa-solid fa-pen-to-square mx-2" onClick={(e)=> (setEdit({...edit,isEdit:true,index:index}))} />  
+                        <AiFillDelete
                           className="fas fa-trash mx-2"
                           style={{ color: "#000000" }}
                           onClick={(e) => delete_func(e, elem)}
-                        ></i>
+                         />
                       </td>
                     </tr>
                   );

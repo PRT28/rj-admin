@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import "bootstrap-icons/font/bootstrap-icons.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { useDispatch, useSelector } from "react-redux";
-import { loadAdmin, getSTate } from "../../slices/adminSlice";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
 
 function Slider({ children }) {
-  const dispatch = useDispatch();
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const removeCookie = useCookies(["token"])[2];
 
   const { loading, data } = useSelector((store) => store.admin);
   console.log(data);
@@ -19,9 +16,7 @@ function Slider({ children }) {
   const [submenuPuzzle, setSubmenuPuzzle] = useState(false);
   const [submenuSetting, setSubmenuSetting] = useState(false);
   const [submenuWhack, setSubmenuWhack] = useState(false);
-  // const {data,loading}=useSelector((store)=> store.admin)
-  // console.log(data,loading)
-
+  console.log('inside slider')
 
   const logout = () => {
     removeCookie("token");
@@ -29,11 +24,7 @@ function Slider({ children }) {
 
   const toggleSelect = (event) => {
     console.log("From Slider", event);
-    // const target = document.querySelector(`#${id}`);
-    // console.log(target);
-    // event.target.classList.push('active');
   };
-  // dispatch(getSTate())
   const toggleJoy = () => setSubmenuJoy(!submenuJoy);
   const togglePuzzle = () => setSubmenuPuzzle(!submenuPuzzle);
   const toggleSetting = () => setSubmenuSetting(!submenuSetting);
@@ -103,14 +94,14 @@ function Slider({ children }) {
           style={{ backgroundColor: "#3C8C7E" }}
         >
           <div className="mt-4">
-            <a
+            <div
               className="text-decolration-none text-white d-non d-sm-inline d-flex align-item-center  mt-4"
               style={{ textDecoration: "none" }}
             >
               <span className="ms-1 fs-4 d-none d-sm-inline text-white p-4 ">
                 Random Joy
               </span>
-            </a>
+            </div>
           </div>
           <div>
             <ul className="nav flex-column pt-4">

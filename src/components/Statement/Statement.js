@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { STATEMENT_API } from "../../util/api";
 import { useCookies } from "react-cookie";
 import { loadStatement } from "../../slices/statementSlice";
+import { loadCategory } from "../../slices/categorySlice";
+import { CATEGORY_API } from "../../util/api";
 import DataTable from "../DataTable";
 import axios from "axios";
 
@@ -11,9 +13,14 @@ const Statement = () => {
   const dispatch = useDispatch();
 
   const [statement, setStatement] = useState({
-    commitment_statement: 1,
-    commitment_text: "",
+    is_commitment: 0,
+    suggestion_text: "",
+    category_text: ''
   });
+
+  const { loading:categoryLoading , data: categoryData } = useSelector(
+    (state) => state.category
+  );
 
   const statementDelete = async (e, elem) => {
     try {
@@ -44,8 +51,27 @@ const Statement = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: CATEGORY_API.getAllCategory,
+        headers: {
+          Authorization:
+            // cookies.token,
+            cookies.token,
+        },
+      });
+      // Dispatch the data to the puzzleSlice to be stored in the store
+      return dispatch(loadCategory(response.data));
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   useEffect(() => {
     fetchStatement();
+    fetchCategories();
   }, [dispatch]);
 
   // Create New Statement
@@ -53,6 +79,10 @@ const Statement = () => {
     e.preventDefault();
 
     try {
+      if (statement.category_text === '' || statement.suggestion_text === '') {
+        alert("Make sure to write a text and select a catgory");
+        return;
+      }
       const response = await axios({
         method: "post",
         url: STATEMENT_API.createStatement,
@@ -110,6 +140,18 @@ const Statement = () => {
                   style={{ fontSize: "15px", borderRadius: "15px" }}
                 />
               </div>
+
+              {!categoryLoading && <div className=" form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="form3Example3">
+                  Category
+                </label>
+                <select className="form-control form-control-lg border-1 border-dark" onChange={(e) => setStatement({...statement, category_text: e.target.value})}>
+                  <option selected hidden value="" >Select a value</option>
+                  {
+                    categoryData.map(d => <option>{d.category_title}</option>)
+                  }
+                </select>
+              </div>}
 
               <div className="text-center text-lg-start mt-4 pt-2 w-100">
                 <button

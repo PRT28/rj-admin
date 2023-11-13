@@ -19,6 +19,8 @@ function Dashboard() {
   const dispatch = useDispatch();
   const [cookies] = useCookies(["token"]);
 
+  console.log('abc')
+
   const ResponseArray = [[], [], [], [], [], []];
 
   // Function to fetch all the data

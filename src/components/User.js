@@ -41,7 +41,7 @@ function User() {
   const fields = ["username", "email", "status", "zip_code", "gender", "role"];
   
   return (
-    <div className="dashboard container vh-100">
+    <div className="dashboard container vh-100" style={{overflow: 'scroll'}}>
       <div className="row mt-4  d-flex">
         <div className="col-sm-6 align-items-center d-flex ">
           <span className="d-none text-sm text-dark d-sm-inline h5">User</span>

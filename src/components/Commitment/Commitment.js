@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { COMMITMENT_API } from "../../util/api";
 import { useCookies } from "react-cookie";
 import { loadCommitment } from "../../slices/commitmentSlice";
+import { loadCategory } from "../../slices/categorySlice";
+import { CATEGORY_API } from "../../util/api";
 import DataTable from "../DataTable";
 import axios from "axios";
 
@@ -11,9 +13,14 @@ const Commitment = () => {
   const dispatch = useDispatch();
 
   const [commitment, setCommitment] = useState({
-    commitment_statement: 0,
-    commitment_text: "",
+    is_commitment: 0,
+    suggestion_text: "",
+    category_text: ''
   });
+
+  const { loading:categoryLoading , data: categoryData } = useSelector(
+    (state) => state.category
+  );
 
   const commitmentDelete = async (e, elem) => {
     try {
@@ -25,6 +32,24 @@ const Commitment = () => {
         return dispatch(loadCommitment(response.data));
     } catch (error) {
       console.log(error, error.response);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: CATEGORY_API.getAllCategory,
+        headers: {
+          Authorization:
+            // cookies.token,
+            cookies.token,
+        },
+      });
+      // Dispatch the data to the puzzleSlice to be stored in the store
+      return dispatch(loadCategory(response.data));
+    } catch (e) {
+      console.warn(e);
     }
   };
 
@@ -45,12 +70,17 @@ const Commitment = () => {
 
   useEffect(() => {
     fetchCommitment();
+    fetchCategories();
   }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      if (commitment.category_text === '' || commitment.suggestion_text === '') {
+        alert("Make sure to write a text and select a catgory");
+        return;
+      }
       const response = await axios({
         method: "post",
         url: COMMITMENT_API.createCommitment,
@@ -60,7 +90,7 @@ const Commitment = () => {
         data: commitment,
       });
       if (response.status == 201) {
-        setCommitment({ ...commitment, commitment_text: "" });
+        setCommitment({ ...commitment, suggestion_text: "" });
         return dispatch(loadCommitment(response.data));
       }
     } catch (e) {
@@ -72,7 +102,7 @@ const Commitment = () => {
     (store) => store.commitment
   );
 
-  const fields = ["commitment_text", "user_id"];
+  const fields = ["suggestion_text", "user_id", "category_text"];
 
   return (
     <div className="dashboard container mb-5 ">
@@ -94,9 +124,9 @@ const Commitment = () => {
                 </label>
                 <input
                   type="text"
-                  name="commitment_text"
+                  name="suggestion_text"
                   id="form3Example3"
-                  value={commitment.commitment_text}
+                  value={commitment.suggestion_text}
                   onChange={(e) =>
                     setCommitment({
                       ...commitment,
@@ -108,6 +138,17 @@ const Commitment = () => {
                   style={{ fontSize: "15px", borderRadius: "15px" }}
                 />
               </div>
+              {!categoryLoading && <div className=" form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="form3Example3">
+                  Category
+                </label>
+                <select className="form-control form-control-lg border-1 border-dark" onChange={(e) => setCommitment({...commitment, category_text: e.target.value})}>
+                  <option selected hidden value="" >Select a value</option>
+                  {
+                    categoryData.map(d => <option>{d.category_title}</option>)
+                  }
+                </select>
+              </div>}
               <div className="text-center text-lg-start mt-4 pt-2 w-100">
                 <button
                   type="submit"
@@ -143,10 +184,6 @@ const Commitment = () => {
               delete_func={commitmentDelete}
               fields={fields}
               action={loadCommitment}
-              // editableFields={{
-              //   component: "commitment",
-              //   editArray: ["commitment_text"],
-              // }}
             />
           ) : (
             <div className="align-items-center d-flex justify-content-center pt-5">

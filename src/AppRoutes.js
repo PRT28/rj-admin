@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 
 import User from "./components/User.js";
 import Slider from "./components/Sidebar/Slider.js";
@@ -38,36 +38,39 @@ import AddWhackType from "./components/Whack/AddWhackType.js";
 import EditData from "./components/EditData.js";
 
 const Routes1 = () => {
+  console.log('123')
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
+    <HashRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-      <Route path="/" element={<Slider />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/editdata" element={<EditData/>}/>
-        <Route path="/user" element={<User />} />
-        <Route path="/category" element={<Category />} />
-        <Route path="/addcategory" element={<AddCategory />} />
-        <Route path="/keyword" element={<Keyword />} />
-        <Route path="/addkeyword" element={<AddKeyword />} />
-        <Route path="/joy/add" element={<AddJoy />} />
-        <Route path="/joy/manage" element={<ManageJoy />} />
-        <Route path="/joy/add/type" element={<AddJoyType />} />
-        <Route path="/whack/add" element={<AddWhack />} />
-        <Route path="/whack/manage" element={<ManageWhack />} />
-        <Route path="/whack/add/type" element={<AddWhackType />} />
-        <Route path="/puzzle/add" element={<AddPuzzle />} />
-        <Route path="/puzzle/manage" element={<ManagePuzzle />} />
-        <Route path="/commitment" element={<Commitment />} />
-        <Route path="/statement" element={<Statement />} />
-        <Route path="/report" element={<Report />} />
-        <Route path="/setting/application" element={<Application />} />
-        <Route path="/setting/faq" element={<FAQ />} />
-        <Route path="/setting/about" element={<AboutUs />} />
-        <Route path="/setting/termscondition" element={<TermsCondition />} />
-      </Route>
-    </Routes>
+          <Route path="/" element={<Slider />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/editdata" element={<EditData/>}/>
+            <Route path="/user" element={<User />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/addcategory" element={<AddCategory />} />
+            <Route path="/keyword" element={<Keyword />} />
+            <Route path="/addkeyword" element={<AddKeyword />} />
+            <Route path="/joy/add" element={<AddJoy />} />
+            <Route path="/joy/manage" element={<ManageJoy />} />
+            <Route path="/joy/add/type" element={<AddJoyType />} />
+            <Route path="/whack/add" element={<AddWhack />} />
+            <Route path="/whack/manage" element={<ManageWhack />} />
+            <Route path="/whack/add/type" element={<AddWhackType />} />
+            <Route path="/puzzle/add" element={<AddPuzzle />} />
+            <Route path="/puzzle/manage" element={<ManagePuzzle />} />
+            <Route path="/commitment" element={<Commitment />} />
+            <Route path="/statement" element={<Statement />} />
+            <Route path="/report" element={<Report />} />
+            <Route path="/setting/application" element={<Application />} />
+            <Route path="/setting/faq" element={<FAQ />} />
+            <Route path="/setting/about" element={<AboutUs />} />
+            <Route path="/setting/termscondition" element={<TermsCondition />} />
+          </Route>
+        </Routes>
+    </HashRouter>
   );
 };
 export default Routes1;
