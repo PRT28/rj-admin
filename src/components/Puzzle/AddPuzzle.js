@@ -106,7 +106,7 @@ const AddPuzzle = () => {
         <div className="row ">
           <div
             className="col-sm card p-4  mb-5 shadow-lg"
-            style={{ borderRadius: "20px", backgroundColor: "#3C8C7E" }}
+            style={{ borderRadius: "20px", backgroundColor: "#494949", border: '1px solid white' }}
           >
             <div className="row pb-5">
               <p className="h5 text-light"> ADD PUZZLE FORM</p>
@@ -175,7 +175,7 @@ const AddPuzzle = () => {
                       <button
                         type="submit"
                         className="btn btn-lg px-5 "
-                        style={{ backgroundColor: "black",border:"1px white solid" }}
+                        style={{ backgroundColor: "#494949",border:"1px white solid" }}
                         onClick={(e) => handleSubmit(e)}
                       >
                         <p className="h5 text-light">Submit</p>

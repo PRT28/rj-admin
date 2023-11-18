@@ -62,7 +62,7 @@ const Keyword = () => {
             <div className="row mt-4  d-flex ">
               <div className="col-sm-6 align-items-center d-flex ">
                 <div className="nav-items fs-4 pb-3">
-                  <span className="d-none text-sm text-dark d-sm-inline h5">
+                  <span className="d-none text-sm text-light d-sm-inline h5">
                     Keyword
                   </span>
                 </div>
@@ -79,7 +79,7 @@ const Keyword = () => {
                     className="btn btn-dark btn-lg border-2 px-5"
                     style={{
                       borderRadius: "20px",
-                      backgroundColor: "#3C8C7E",
+                      backgroundColor: "#494949",
                       borderColor: "white",
                     }}
                   >

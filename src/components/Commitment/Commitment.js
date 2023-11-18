@@ -112,7 +112,7 @@ const Commitment = () => {
   return (
     <div className="dashboard container mb-5 ">
       <div className="nav-items fs-4 pb-3">
-        <span className="d-none text-sm text-dark d-sm-inline h5">
+        <span className="d-none text-sm text-light d-sm-inline h5">
           Commitment
         </span>
       </div>

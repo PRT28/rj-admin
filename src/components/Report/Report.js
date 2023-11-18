@@ -45,7 +45,7 @@ function Report() {
   return (
     <div className="dashboard container vh-100">
       <div className="nav-items fs-4 ">
-        <span className="d-none text-sm text-dark d-sm-inline h5">Report</span>
+        <span className="d-none text-sm text-light d-sm-inline h5">Report</span>
       </div>
       <div className="row">
         <div className="">

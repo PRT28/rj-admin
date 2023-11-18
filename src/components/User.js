@@ -44,7 +44,7 @@ function User() {
     <div className="dashboard container vh-100" style={{overflow: 'scroll'}}>
       <div className="row mt-4  d-flex">
         <div className="col-sm-6 align-items-center d-flex ">
-          <span className="d-none text-sm text-dark d-sm-inline h5">User</span>
+          <span className="d-none text-sm text-light d-sm-inline h5">User</span>
         </div>
 
         <div className="col-sm-6 d-flex flex-row-reverse px-5">
@@ -55,7 +55,7 @@ function User() {
               className="btn btn-lg border-2 px-5"
               style={{
                 borderRadius: "20px",
-                backgroundColor: "#3C8C7E",
+                backgroundColor: "#494949",
                 borderColor: "white",
               }}
             >
@@ -72,7 +72,7 @@ function User() {
             className="btn btn-light btn-lg border-2 px-5"
             style={{
               borderRadius: "20px",
-              backgroundColor: "#3C8C7E",
+              backgroundColor: "#494949",
               borderColor: "white",
               marginRight: '10px'
             }}

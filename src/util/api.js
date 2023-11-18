@@ -1,4 +1,4 @@
-const baseURL = "https://random-joy.onrender.com";
+const baseURL = "https://random-backend.digitalcodemasters.info";
 
 export const AUTH_API = {
   register: baseURL + "/auth/register",

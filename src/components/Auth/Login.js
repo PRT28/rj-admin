@@ -3,17 +3,16 @@ import axios from "axios";
 import { AUTH_API } from "../../util/api";
 import { useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
-import Register from "./Register";
 import { loadAdmin } from "../../slices/adminSlice";
-import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
+import './Login.scss';
+import {ReactComponent as Logo} from "./logo.svg";
 
 function Login() {
   const dispatch = useDispatch();
-  const [cookies, setCookie] = useCookies(["token"]);
+  const setCookie = useCookies(["token"])[1];
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [register, loadRegister] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -49,13 +48,13 @@ function Login() {
   // if (register) return <Register loadRegister={loadRegister} />;
 
   return (
-    <section>
-      <div className="container-fluid  ">
+    <div>
+      <div className="container-fluid img-background background-tint">
         <div className="row d-flex justify-content-center align-items-center vh-100 ">
         <div className="d-none d-lg-block">
         <nav className="navbar  navbar-expand-lg navbar-light bg-transparent position-fixed m-3 mx-5 postition-absolute-lg fixed-top m-5-lg border-5 w-auto text-dark rounded">
             <a className="navbar-brand px-4 text-light" href="#">
-              Logo
+              <Logo />
             </a>
             <button
               className="navbar-toggler"
@@ -108,7 +107,7 @@ function Login() {
           </div>
           <div
             className=" col-md-6  h-100 align-items-center d-flex justify-content-center"
-            style={{ backgroundColor: "#3C8C7E" }}
+            
           >
             {loading ? (
               <div
@@ -118,14 +117,14 @@ function Login() {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              <form className="w-50">
+              <form className="form-conatiner">
                 <label
                   className="h3 m-4 mx-0 mb-4 text-light"
                   htmlFor="form3Example3"
                 >
                   LOGIN
                 </label>
-                <div className=" form-outline mb-3 ">
+                <div className=" form-outline mb-3 text-align-left ">
                   <label
                     className="form-label h5 text-light"
                     htmlFor="form3Example3"
@@ -136,7 +135,7 @@ function Login() {
                     type="email"
                     name="email"
                     id="form3Example3"
-                    className="form-control form-control-lg border-1 border-dark"
+                    className="form-control form-control-lg input-custom"
                     maxLength="256"
                     style={{ fontSize: "15px", borderRadius: "15px" }}
                     placeholder="Your email here"
@@ -145,7 +144,7 @@ function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
-                <div className="form-outline mb-3 ">
+                <div className="form-outline mb-3 text-align-left">
                   <label
                     className="form-label h5 text-light"
                     htmlFor="form3Example4"
@@ -156,7 +155,7 @@ function Login() {
                     type="password"
                     name="password"
                     id="form3Example4"
-                    className="form-control form-control-lg border-1 border-dark"
+                    className="form-control form-control-lg input-custom"
                     minLength="8"
                     style={{ fontSize: "15px", borderRadius: "15px" }}
                     placeholder="Your password here"
@@ -168,37 +167,22 @@ function Login() {
                 <div className="text-center text-lg-start mt-4 pt-2 w-100">
                   <button
                     type="button"
-                    className="btn  btn-lg w-100"
-                    style={{
-                      paddingLeft: "2.5rem",
-                      paddingRight: "2.5rem",
-                      border: "1px solid white",
-                    }}
+                    className="w-100 button-login"
                     onClick={(e) => handleSubmit(e)}
                     disabled={
                       email && password ? false : true
                     }
                   >
-                    <p className="h4 text-light">Login</p>
+                    Login
                   </button>
                   {error && <p className="text-danger mt-2">{error}</p>}
                 </div>
               </form>
             )}
           </div>
-          <div
-            className="col-md-6 h-100 d-flex "
-            style={{ backgroundColor: "#3C8C7E" }}
-          >
-            <img
-              src="https://images.unsplash.com/photo-1557754897-ca12c5049d83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80"
-              className="rounded object-fit-cover d-block w-100 d-none d-sm-block "
-              alt="Sample image"
-            />
-          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 export default Login;

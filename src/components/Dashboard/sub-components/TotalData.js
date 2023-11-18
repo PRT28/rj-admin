@@ -6,12 +6,12 @@ const TotalData = ({ data }) => {
       <div className="row">
         <div
           className="col-sm card mx-2 border shadow-lg  p-4 mb-3 pb-2"
-          style={{ borderRadius: "20px" }}
+          style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
         >
           <i
             className="fa-solid fa-user p-3 rounded mb-3 fa-2x "
             style={{
-              backgroundColor: "#3C8C7E",
+              backgroundColor: "#16B8D9",
               width: "fit-content",
               color: "white",
             }}
@@ -22,12 +22,12 @@ const TotalData = ({ data }) => {
         </div>
         <div
           className="col-sm card border mx-2 border shadow-lg p-4 mb-3 pb-2"
-          style={{ borderRadius: "20px" }}
+          style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
         >
           <i
             className="fas fa-clipboard-list p-3 rounded mb-3 fa-2x "
             style={{
-              backgroundColor: "#3C8C7E",
+              backgroundColor: "#16B8D9",
               width: "fit-content",
               color: "white",
             }}
@@ -38,12 +38,12 @@ const TotalData = ({ data }) => {
         </div>
         <div
           className="col-sm card border mx-2 border-0 shadow-lg p-4 mb-3 pb-2"
-          style={{ borderRadius: "20px" }}
+          style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
         >
           <i
             className="fas fa-align-left p-3 rounded mb-3 fa-2x "
             style={{
-              backgroundColor: "#3C8C7E",
+              backgroundColor: "#16B8D9",
               width: "fit-content",
               color: "white",
             }}
@@ -54,12 +54,12 @@ const TotalData = ({ data }) => {
         </div>
         <div
           className="col-sm card border mx-2 shadow-lg p-4 mb-3 pb-2"
-          style={{ borderRadius: "20px" }}
+          style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
         >
           <i
             className="fas fa-comment p-3 rounded mb-3 fa-2x "
             style={{
-              backgroundColor: "#3C8C7E",
+              backgroundColor: "#16B8D9",
               width: "fit-content",
               color: "white",
             }}
@@ -86,12 +86,12 @@ const TotalData = ({ data }) => {
         </div> */}
         <div
           className="col-sm card mx-2 border shadow-lg p-4 mb-3 pb-2"
-          style={{ borderRadius: "20px" }}
+          style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
         >
           <i
             className="fab fa-solid fa-wikipedia-w p-3 rounded mb-3 fa-2x "
             style={{
-              backgroundColor: "#3C8C7E",
+              backgroundColor: "#16B8D9",
               width: "fit-content",
               color: "white",
             }}

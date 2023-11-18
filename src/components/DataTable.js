@@ -35,7 +35,7 @@ const DataTable = ({ actualData, fields, editableFields, delete_API, action, edi
             placeholder="Search here"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            style={{ borderRadius: "20px" }}
+            style={{ borderRadius: "20px", backgroundColor: '#5D5D5D', color: '#FFF' }}
           />
         </div>
       </div>
@@ -57,13 +57,13 @@ const DataTable = ({ actualData, fields, editableFields, delete_API, action, edi
                       <th
                         key={title}
                         scope="col"
-                        style={{ backgroundColor: "#3C8C7E", padding: "15px", color: "white" }}
+                        style={{ backgroundColor: "#3D3D3D", padding: "15px", color: "white" }}
                       >
                         {title}
                       </th>
                     );
                   })}
-                  <th style={{ backgroundColor: "#3C8C7E", padding: "15px", color: "white" }}>
+                  <th style={{ backgroundColor: "#3D3D3D", padding: "15px", color: "white" }}>
                     Action
                   </th>
                 </tr>
@@ -78,18 +78,18 @@ const DataTable = ({ actualData, fields, editableFields, delete_API, action, edi
                         return (
                           <td
                             key={keys}
-                            style={{ backgroundColor: "#3C8C7E99" }}
+                            style={{ backgroundColor: "#5E5E5E" }}
                           >
                             {elem[keys] ? 
                             elem[keys] : "No Entry"}
                           </td>
                         );
                       })}
-                      <td style={{ backgroundColor: "#3C8C7E99" }}>
-                         <AiTwotoneEdit className="fa-solid fa-pen-to-square mx-2" onClick={(e)=> (setEdit({...edit,isEdit:true,index:index}))} />  
+                      <td style={{ backgroundColor: "#5E5E5E" }}>
+                         <AiTwotoneEdit className="fa-solid fa-pen-to-square mx-2" style={{color: '#63C5CB'}} onClick={(e)=> (setEdit({...edit,isEdit:true,index:index}))} />  
                         <AiFillDelete
                           className="fas fa-trash mx-2"
-                          style={{ color: "#000000" }}
+                          style={{ color: "#FF7272" }}
                           onClick={(e) => delete_func(e, elem)}
                          />
                       </td>

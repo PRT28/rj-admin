@@ -77,7 +77,7 @@ function Dashboard() {
   return (
     <div className="dashboard container ">
       <div className="nav-items fs-4 pb-3">
-        <span className="d-none text-sm text-dark d-sm-inline h5">
+        <span className="d-none text-sm text-light d-sm-inline h5">
           Dashboard
         </span>
       </div>
@@ -88,7 +88,7 @@ function Dashboard() {
           <div className="row">
             <div
               className="col-sm-9 card border mx-2 shadow-lg p-3 mb-5 "
-              style={{ borderRadius: "20px" }}
+              style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
             >
               <div className="h1">
                 {!loading && dashboardData && (
@@ -99,7 +99,7 @@ function Dashboard() {
             </div>
             <div
               className="col-sm card border mx-2 shadow-lg p-3 pt-5 mb-5 "
-              style={{ borderRadius: "20px" }}
+              style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
             >
               <div className="h1">
                 {!loading && dashboardData && (

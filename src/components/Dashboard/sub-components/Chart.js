@@ -63,6 +63,7 @@ const BarChart = ({ ChartData }) => {
         type: "bar",
         data,
         options: {
+          responsive: true,
           scales: {
             y: {
               beginAtZero: true,

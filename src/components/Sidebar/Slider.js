@@ -32,7 +32,7 @@ function Slider({ children }) {
   return (
     <div className=" container-fluid " style={{ backgroundColor: "white" }}>
       <div className="row">
-          <Navbar className="d-block d-sm-none border-1" expand="md" style={{ backgroundImage: "linear-gradient(to right, white ,#3C8C7E )", border:"1px solid black"}}>
+          <Navbar className="d-block d-sm-none border-1" expand="md" style={{backgroundColor: '#494949', border:"1px solid black"}}>
             <Container>
               <Navbar.Brand href="#home">Random Joy</Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -91,7 +91,7 @@ function Slider({ children }) {
           </Navbar>
         <div
           className="d-none d-sm-block col-auto col-md-2 min-vh-100 d-flex flex-column"
-          style={{ backgroundColor: "#3C8C7E" }}
+          style={{ backgroundColor: "#363636" }}
         >
           <div className="mt-4">
             <div
@@ -418,12 +418,12 @@ function Slider({ children }) {
         <div
           className="col-md-10 "
           style={{
-            backgroundImage: "linear-gradient(to right, white ,#3C8C7E )",
+            backgroundColor: '#494949',
           }}
         >
           <div className=" row">
             <ul className="col-md-6 nav flex-row ">
-              <li className="nav-items text-dark fs-4 pt-5 pb-3 ps-5 d-flex align-items-center justify-content-center">
+              <li className="nav-items text-light fs-4 pt-5 pb-3 ps-5 d-flex align-items-center justify-content-center">
                 <Link className="navbar-brand">
                   <img
                     src="https://www.pngitem.com/pimgs/m/24-248309_transparent-profile-clipart-font-awesome-user-circle-hd.png"
@@ -443,7 +443,7 @@ function Slider({ children }) {
                   className="btn btn-dark btn-lg border-2 px-5"
                   style={{
                     borderRadius: "20px",
-                    backgroundColor: "#3C8C7E",
+                    backgroundColor: "#494949",
                     border: "black solid ",
                     borderColor: "white",
                   }}

@@ -1,0 +1,52 @@
+.img-background {
+    background-image: linear-gradient(180deg, 
+    rgba(245, 141, 66, 0.5), 
+    rgba(0, 0, 0, 0.75)), url(
+        "https://images.unsplash.com/photo-1557754897-ca12c5049d83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80");
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+}
+
+.form-conatiner {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 80px;
+    width: 418px;
+    text-align: center;
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.input-custom {
+    border-radius: 12px !important;
+    border: 2px solid #FFF !important; 
+    background: #FDBA81 !important;
+}
+
+.button-login {
+    padding-left: "2.5rem";
+    padding-right: "2.5rem";
+    padding-top:  15px;
+    padding-bottom: 15px;
+    border: 2px solid white;
+    transition: all 0.5s ease-in-out;
+    background-color: transparent;
+    border-radius: 12px;
+    color: #FFF;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+
+    &:hover {
+        background-color: #FFF;
+        color: #FDBA81 !important;
+    }
+}
+
+// .background-tint {
+//     filter: sepia(100%) saturate(200%) brightness(70%) hue-rotate(330deg);
+//   }

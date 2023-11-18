@@ -109,7 +109,7 @@ function ManagePuzzle() {
   return (
     <div className="dashboard container vh-100">
       <div className="nav-items fs-4 ">
-        <span className="d-none text-sm text-dark d-sm-inline h6">
+        <span className="d-none text-sm text-light d-sm-inline h6">
           {`Puzzle-> Manage Puzzle`}
         </span>
       </div>
