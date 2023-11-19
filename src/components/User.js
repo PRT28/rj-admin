@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUser } from "../slices/userSlice";
-import { USER_API } from "../util/api";
+import { AUTH_API, USER_API } from "../util/api";
 import DataTable from "./DataTable";
 import { useCookies } from "react-cookie";
 import axios from "axios";
@@ -14,6 +14,7 @@ function User() {
   const [cookies] = useCookies(["token"]);
   const dispatch = useDispatch();
   
+  const [data, setData] = useState(null)
   const [show, setShow] = useState(false);
 
   const fetchApi = async () => {
@@ -30,6 +31,21 @@ function User() {
       console.warn(e);
     }
   };
+
+  const deleteHandle = async (e, elem) => {
+    try {
+      const response = await axios({
+        method: "delete",
+        url: `${AUTH_API.delete}/${elem._id}`,
+        headers: {
+          Authorization: cookies.token,
+        },
+      });
+      if (response.status === 200) return dispatch(loadUser(response.data));
+    } catch (e) {
+      console.warn(e);
+    }
+  }
 
   useEffect(() => {
     fetchApi();
@@ -94,7 +110,8 @@ function User() {
             <DataTable
               actualData={userData}
               fields={fields}
-              editableFields={[""]}
+              edit_func={(e, elem) => { setShow(true); setData(elem) }}
+              delete_func={deleteHandle}
             />
           ) : (
             <div className="align-items-center d-flex justify-content-center pt-5">
@@ -106,7 +123,7 @@ function User() {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-        <Register loadRegister={setShow} />
+        <Register loadRegister={setShow} data={data} />
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Close

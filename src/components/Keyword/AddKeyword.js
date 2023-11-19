@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { KEYWORD_API } from "../../util/api";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import StringValidate from "../../util/inputStringValidate";
 
-const AddKeyword = () => {
-  const dispatch = useDispatch();
+const AddKeyword = ({data, setShow}) => {
   const [cookies] = useCookies(["token"]);
-  const navigate = useNavigate();
 
   // Keyword Data State
   const [keywordData, setKeywordData] = useState({
-    title: "",
-    description: "",
+    title: data ? data.title :"",
+    description:  data ? data.description : "",
   });
 
   // Fetching the user Data from redux state
@@ -31,26 +27,51 @@ const AddKeyword = () => {
     e.preventDefault();
 
     // Send request to the API
-    try {
-      const response = await axios({
-        method: "post",
-        url: KEYWORD_API.createKeyword,
-        headers: {
-          Authorization: cookies["token"],
-        },
-        data: keywordData,
-      });
 
-      // Set the values to default and navigate to the Manage Keywords
-      setKeywordData({
-        ...keywordData,
-        title: "",
-        description: "",
-      });
-
-      if (response.status === 201) return navigate("/keyword");
-    } catch (e) {
-      console.log("From AddKeyword Error:", e);
+    if (data) {
+      try {
+        const response = await axios({
+          method: "put",
+          url: `${KEYWORD_API.updateKeyword}?id=${data._id}`,
+          headers: {
+            Authorization: cookies["token"],
+          },
+          data: keywordData,
+        });
+  
+        // Set the values to default and navigate to the Manage Keywords
+        setKeywordData({
+          ...keywordData,
+          title: "",
+          description: "",
+        });
+  
+        if (response.status === 201) return setShow(false);
+      } catch (e) {
+        console.log("From AddKeyword Error:", e);
+      }
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: KEYWORD_API.createKeyword,
+          headers: {
+            Authorization: cookies["token"],
+          },
+          data: keywordData,
+        });
+  
+        // Set the values to default and navigate to the Manage Keywords
+        setKeywordData({
+          ...keywordData,
+          title: "",
+          description: "",
+        });
+  
+        if (response.status === 201) return setShow(false);
+      } catch (e) {
+        console.log("From AddKeyword Error:", e);
+      }
     }
   };
 
@@ -110,6 +131,20 @@ const AddKeyword = () => {
                   }}
                 >
                   <p className="h4 text-light">Submit</p>
+                </button>
+                <button
+                  type="submit"
+                  className="btn  btn-lg w-100"
+                  style={{
+                    paddingLeft: "2.5rem",
+                    paddingRight: "2.5rem",
+                    borderRadius: "20px",
+                    backgroundColor: "#3C8C7E",
+                    marginTop: '10px'
+                  }}
+                  onClick={() => setShow(false)}
+                >
+                  <p className="h4 text-light">Close</p>
                 </button>
               </div>
             </form>

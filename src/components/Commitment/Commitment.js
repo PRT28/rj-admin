@@ -7,10 +7,15 @@ import { loadCategory } from "../../slices/categorySlice";
 import { CATEGORY_API } from "../../util/api";
 import DataTable from "../DataTable";
 import axios from "axios";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button"
 
 const Commitment = () => {
   const [cookies] = useCookies(["token"]);
   const dispatch = useDispatch();
+  
+  const [data, setData] = useState(null)
+  const [show, setShow] = useState(false);
 
   const [commitment, setCommitment] = useState({
     is_commitment: 0,
@@ -79,28 +84,57 @@ const Commitment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      if (commitment.category_text === '' || commitment.suggestion_text === '') {
-        alert("Make sure to write a text and select a catgory");
-        return;
+    if (data) {
+      try {
+        if (commitment.category_text === '' || commitment.suggestion_text === '') {
+          alert("Make sure to write a text and select a catgory");
+          return;
+        }
+        const response = await axios({
+          method: "put",
+          url:`${COMMITMENT_API.updateCommitment}/${data._id}`,
+          headers: {
+            Authorization: cookies.token,
+          },
+          data: commitment,
+        });
+        if (response.status == 201) {
+          setCommitment({ ...commitment, suggestion_text: "", category_text: '' });
+          dispatch(loadCommitment(response.data));
+          fetchCommitment();
+          setShow(false);
+          setData(null);
+          return;
+        }
+      } catch (e) {
+        console.warn(e);
       }
-      const response = await axios({
-        method: "post",
-        url: COMMITMENT_API.createCommitment,
-        headers: {
-          Authorization: cookies.token,
-        },
-        data: commitment,
-      });
-      if (response.status == 201) {
-        setCommitment({ ...commitment, suggestion_text: "", category_text: '' });
-        dispatch(loadCommitment(response.data));
-        fetchCommitment();
-        return;
+    } else {
+      try {
+        if (commitment.category_text === '' || commitment.suggestion_text === '') {
+          alert("Make sure to write a text and select a catgory");
+          return;
+        }
+        const response = await axios({
+          method: "post",
+          url: COMMITMENT_API.createCommitment,
+          headers: {
+            Authorization: cookies.token,
+          },
+          data: commitment,
+        });
+        if (response.status == 201) {
+          setCommitment({ ...commitment, suggestion_text: "", category_text: '' });
+          dispatch(loadCommitment(response.data));
+          fetchCommitment();
+          return;
+        }
+      } catch (e) {
+        console.warn(e);
       }
-    } catch (e) {
-      console.warn(e);
     }
+
+    
   };
 
   const { data: commitmentData, loading } = useSelector(
@@ -189,6 +223,7 @@ const Commitment = () => {
               delete_func={commitmentDelete}
               fields={fields}
               action={loadCommitment}
+              edit_func={(e, elem) => {setShow(true); setData(elem);}}
             />
           ) : (
             <div className="align-items-center d-flex justify-content-center pt-5">
@@ -199,6 +234,59 @@ const Commitment = () => {
           )}
         </div>
       </div>
+      <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
+      <form className="" onSubmit={(e) => handleSubmit(e)}>
+              <div className=" form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="form3Example3">
+                  Commitment
+                </label>
+                <input
+                  type="text"
+                  name="suggestion_text"
+                  id="form3Example3"
+                  value={data?.suggestion_text}
+                  onChange={(e) =>
+                    setCommitment({
+                      ...commitment,
+                      [e.target.name]: e.target.value,
+                    })
+                  }
+                  className="form-control form-control-lg border-1 border-dark"
+                  maxLength="256"
+                  style={{ fontSize: "15px", borderRadius: "15px" }}
+                />
+              </div>
+              {!categoryLoading && <div className=" form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="form3Example3">
+                  Category
+                </label>
+                <select className="form-control form-control-lg border-1 border-dark" onChange={(e) => setCommitment({...commitment, category_text: e.target.value})}>
+                  {
+                    categoryData.map(d => <option selected={data?.category_title === d.category_title}>{d.category_title}</option>)
+                  }
+                </select>
+              </div>}
+              <div className="text-center text-lg-start mt-4 pt-2 w-100">
+                <button
+                  type="submit"
+                  className="btn  btn-lg w-100"
+                  style={{
+                    paddingLeft: "2.5rem",
+                    paddingRight: "2.5rem",
+                    borderRadius: "20px",
+                    backgroundColor: "#3C8C7E",
+                  }}
+                >
+                  <p className="h4 text-light">Submit</p>
+                </button>
+              </div>
+            </form>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -14,6 +14,7 @@ const Category = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate;
   const [cookies] = useCookies(["token"]);
+  const [data, setData] = useState(null)
   const [show, setShow] = useState(false);
 
   const categoryDelete = async (e, elem) => {
@@ -100,13 +101,8 @@ const Category = () => {
                   actualData={categoryData}
                   fields={fields}
                   delete_func={categoryDelete}
-                  edit_API={CATEGORY_API.updateCategory}
+                  edit_func={(e, elem) => { setShow(true); setData(elem); } }
                   action={loadCategory}
-                  editableFields={{
-                    component: "category",
-                    editArray: ["category_description", "category_title"],
-                  }}
-                  // editableFields={["category_description", "category_title"]}
                 />
               ) : (
                 <div className="align-items-center d-flex justify-content-center pt-5">
@@ -120,7 +116,7 @@ const Category = () => {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-        <AddCategory setShow={setShow} fetchApi={fetchApi} />
+        <AddCategory setShow={setShow} fetchApi={fetchApi} data={data} />
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Close

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCookies } from "react-cookie";
 import { useNavigate, Link } from "react-router-dom";
@@ -6,11 +6,14 @@ import axios from "axios";
 import { KEYWORD_API } from "../../util/api";
 import { loadKeyword } from "../../slices/keywordSlice";
 import DataTable from "../DataTable";
+import AddKeyword from "./AddKeyword";
 
 const Keyword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cookies] = useCookies(["token"]);
+  const [show, setShow] = useState(false);
+  const [data, setData] = useState(null)
 
   const keywordDelete = async (e, elem) => {
     try {
@@ -56,7 +59,7 @@ const Keyword = () => {
 
   return (
     <>
-      <div className="dashboard container vh-100">
+      {!show && <div className="dashboard container vh-100">
         <div className="row">
           <div>
             <div className="row mt-4  d-flex ">
@@ -68,12 +71,7 @@ const Keyword = () => {
                 </div>
               </div>
               <div className="col-sm-6 d-flex flex-row-reverse px-5">
-                <Link
-                  to="/addkeyword"
-                  className="text-decoration-none"
-                  aria-current="page"
-                  style={{ color: "#ffffff" }}
-                >
+                
                   <button
                     type="button"
                     className="btn btn-dark btn-lg border-2 px-5"
@@ -82,6 +80,7 @@ const Keyword = () => {
                       backgroundColor: "#494949",
                       borderColor: "white",
                     }}
+                    onClick={() => { setShow(true); setData(null); }}
                   >
                     <p className="h5">
                       <i
@@ -91,7 +90,6 @@ const Keyword = () => {
                       Add
                     </p>
                   </button>
-                </Link>
               </div>
             </div>
             <div>
@@ -100,10 +98,9 @@ const Keyword = () => {
                   <DataTable
                     actualData={keywordData}
                     fields={fields}
-                    editableFields={["keyword_description", "keyword_title"]}
                     delete_func={keywordDelete}
-                    edit_API={KEYWORD_API.updateKeyword}
                     action={loadKeyword}
+                    edit_func={(e, elem) => { setShow(true); setData(elem) }}
                   />
                 ) : (
                   <div className="align-items-center d-flex justify-content-center pt-5">
@@ -116,7 +113,10 @@ const Keyword = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
+      {
+        show && <AddKeyword data={data} setShow={setShow} />
+      }
     </>
   );
 };

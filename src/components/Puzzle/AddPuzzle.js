@@ -5,22 +5,30 @@ import { PUZZLE_API } from "../../util/api";
 import { useCookies } from "react-cookie";
 import QuestionType from "./QuestionType";
 
-const AddPuzzle = () => {
+const AddPuzzle = ({data, setShow, fetchApi}) => {
   const [cookies] = useCookies(["token"]);
   const navigate = useNavigate();
 
   // Question Type available
-  const questiontypes = ["MCQ", "T/F", "Text"];
+  const questiontypes = ["MCQ", "True/False", "Text"];
+
+  const checkHandle = (value) => {
+    if (value === "MCQ") return 0;
+    if (value === "True/False") return 1;
+    if (value === "Text") return 2;
+  }
 
   const [puzzleData, setPuzzleData] = useState({
-    question: "",
-    questionType: 0,
-    optionA: "",
-    optionB: "",
-    optionC: "",
-    optionD: "",
-    answer: "",
+    question: data ? data.question : "",
+    questionType: data ? checkHandle(data.questionType) : 0,
+    optionA: data ? data.optionA : "",
+    optionB: data ? data.optionB : "",
+    optionC: data ? data.optionC : "",
+    optionD: data ? data.optionD : "",
+    answer:data ? data.answer :  "",
   });
+
+  console.log(data);
 
   const [checkedState, setCheckedState] = useState({
     selectedOption: "",
@@ -38,7 +46,7 @@ const AddPuzzle = () => {
     setPuzzleData({
       ...puzzleData,
       [e.target.name]:
-        value == "MCQ" ? 0 : value == "T/F" ? 1 : value == "Text" ? 2 : value,
+        value === "MCQ" ? 0 : value === "True/False" ? 1 : value === "Text" ? 2 : value,
     });
   };
 
@@ -50,32 +58,65 @@ const AddPuzzle = () => {
     // Send request to the API
     console.log(puzzleData);
 
-   try {
-      const response = await axios({
-        method: "post",
-        url: PUZZLE_API.createPuzzle,
-        headers: {
-          Authorization: cookies["token"],
-        },
-        data: puzzleData,
-      });
-
-
-      // Set the values to default and navigate to the Manage Puzzle
-      setPuzzleData({
-        ...puzzleData,
-        question: "",
-        questionType: 0,
-        optionA: "",
-        optionB: "",
-        optionC: "",
-        optionD: "",
-        answer: "",
-      });
-
-      if (response.status === 201) navigate("/puzzle/manage");
-    } catch (e) {
-      console.log(e, e.response);
+    if (data) {
+      try {
+        const response = await axios({
+          method: "put",
+          url: `${PUZZLE_API.updatePuzzle}?puzzleId=${data._id}`,
+          headers: {
+            Authorization: cookies["token"],
+          },
+          data: puzzleData,
+        });
+  
+  
+        // Set the values to default and navigate to the Manage Puzzle
+        setPuzzleData({
+          ...puzzleData,
+          question: "",
+          questionType: 0,
+          optionA: "",
+          optionB: "",
+          optionC: "",
+          optionD: "",
+          answer: "",
+        });
+  
+        if (response.status === 201) {
+          fetchApi();
+          setShow(false);
+        }
+      } catch (e) {
+        console.log(e, e.response);
+      }
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: PUZZLE_API.createPuzzle,
+          headers: {
+            Authorization: cookies["token"],
+          },
+          data: puzzleData,
+        });
+  
+  
+        // Set the values to default and navigate to the Manage Puzzle
+        setPuzzleData({
+          ...puzzleData,
+          question: "",
+          questionType: 0,
+          optionA: "",
+          optionB: "",
+          optionC: "",
+          optionD: "",
+          answer: "",
+        });
+  
+        if (response.status === 201) navigate("/puzzle/manage");
+      } catch (e) {
+        console.log(e, e.response);
+      }
     }
   };
 
@@ -94,6 +135,8 @@ const AddPuzzle = () => {
   //   return (
   //   );
   // };
+
+ 
 
   return (
     <>
@@ -146,11 +189,11 @@ const AddPuzzle = () => {
                           name="questionType"
                           onChange={(e) => handleChange(e)}
                           id="questionType"
+                          defaultValue={data ? data.questionType : ''}
                         >
-                          <option selected hidden value="">Select</option>
                           {questiontypes.map((elem) => {
                             return (
-                              <option value={elem}>
+                              <option selected={data ? data.questionType === checkHandle(elem) : false} value={elem}>
                                 {elem}
                               </option>
                             );

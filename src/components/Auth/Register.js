@@ -2,21 +2,19 @@ import React, { useState } from "react";
 import axios from "axios";
 import { AUTH_API } from "../../util/api";
 import { useDispatch } from "react-redux";
-import { loadAdmin } from "../../slices/adminSlice";
+import { loadAdmin } from "../../slices/adminSlice"
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 
-function Register({ loadRegister }) {
+function Register({ loadRegister, data }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies] = useCookies(["token"]);
 
   const [registerData, setRegisterData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    gender: "",
-    zip_code: "",
+    username: data ? data.username : '',
+    email: data ? data.email : "",
+    password: data ? data.password : "",
+    gender: data ? data.gender : "",
+    zip_code: data ? data.zip_code : "",
     role: 1,
   });
   const [loading, setLoading] = useState(false);
@@ -26,10 +24,10 @@ function Register({ loadRegister }) {
     const name = e.target.name;
     let numericValue;
     // Validate zip_code to only get the numeric Value
-    if (name == "zip_code") numericValue = e.target.value.replace(/\D/g, "");
+    if (name === "zip_code") numericValue = e.target.value.replace(/\D/g, "");
     setRegisterData({
       ...registerData,
-      [name]: name == "zip_code" ? numericValue : e.target.value,
+      [name]: name === "zip_code" ? numericValue : e.target.value,
     });
   };
   const handleSubmit = async (e) => {
@@ -37,23 +35,49 @@ function Register({ loadRegister }) {
 
     console.log(registerData);
     setLoading(true);
-    try {
-      const response = await axios({
-        method: "post",
-        url: AUTH_API.register,
-        data: registerData,
-      });
 
-      if (response.status == 201) {
-        dispatch(loadAdmin(response.data._doc));
-        // setCookie('token',response.data.tokeconsole.log(e);n);
+    if (data) {
+      try {
+        const response = await axios({
+          method: "patch",
+          url: `${AUTH_API.update}/${data._id}`,
+          data: registerData,
+          headers: {
+            Authorization: cookies["token"],
+          }
+        });
+  
+        if (response.status === 201) {
+          dispatch(loadAdmin(response.data._doc));
+          // setCookie('token',response.data.tokeconsole.log(e);n);
+          setLoading(false);
+          loadRegister(false);
+        }
+      } catch (e) {
         setLoading(false);
-        loadRegister(false);
+        setError(e);
       }
-    } catch (e) {
-      setLoading(false);
-      setError(e);
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: AUTH_API.register,
+          data: registerData,
+        });
+  
+        if (response.status === 201) {
+          dispatch(loadAdmin(response.data._doc));
+          // setCookie('token',response.data.tokeconsole.log(e);n);
+          setLoading(false);
+          loadRegister(false);
+        }
+      } catch (e) {
+        setLoading(false);
+        setError(e);
+      }
     }
+
+    
 
     setRegisterData({
       username: "",
@@ -127,7 +151,8 @@ function Register({ loadRegister }) {
                               type="radio"
                               name="gender"
                               id="femaleGender"
-                              value="F"
+                              value="female"
+                              defaultChecked={data.gender.toLowerCase() === 'female'}
                               onChange={(e) => handleChange(e)}
                             />
                             <label
@@ -144,7 +169,8 @@ function Register({ loadRegister }) {
                               type="radio"
                               name="gender"
                               id="maleGender"
-                              value="M"
+                              value="male"
+                              defaultChecked={data.gender.toLowerCase() === 'male'}
                               onChange={(e) => handleChange(e)}
                             />
                             <label
@@ -161,7 +187,8 @@ function Register({ loadRegister }) {
                               type="radio"
                               name="gender"
                               id="otherGender"
-                              value="Other"
+                              value="other"
+                              defaultChecked={data.gender.toLowerCase() !== 'male' || data.gender.toLowerCase() !== 'female'}
                               onChange={(e) => handleChange(e)}
                             />
                             <label
@@ -196,7 +223,7 @@ function Register({ loadRegister }) {
                               className="btn btn-lg ms-2 text-light"
                               style={{ backgroundColor: "#3C8C7E" }}
                             >
-                              Register
+                              {data ? 'Update'  :'Register'}
                             </button>
                             {error && (
                               <p className="text-danger mt-2">{error}</p>

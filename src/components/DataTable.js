@@ -86,7 +86,7 @@ const DataTable = ({ actualData, fields, editableFields, delete_API, action, edi
                         );
                       })}
                       <td style={{ backgroundColor: "#5E5E5E" }}>
-                         <AiTwotoneEdit className="fa-solid fa-pen-to-square mx-2" style={{color: '#63C5CB'}} onClick={(e)=> (setEdit({...edit,isEdit:true,index:index}))} />  
+                         <AiTwotoneEdit className="fa-solid fa-pen-to-square mx-2" style={{color: '#63C5CB'}} onClick={(e) => edit_func(e, elem)} />  
                         <AiFillDelete
                           className="fas fa-trash mx-2"
                           style={{ color: "#FF7272" }}

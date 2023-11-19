@@ -1,14 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { editPuzzle, loadPuzzle } from "../../slices/puzzleSlice";
 import { PUZZLE_API } from "../../util/api";
 import DataTable from "../DataTable";
+import AddPuzzle from "./AddPuzzle";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
 
 function ManagePuzzle() {
   const [cookies] = useCookies(["token"]);
   const dispatch = useDispatch();
+
+  
+  const [data, setData] = useState(null)
+  const [show, setShow] = useState(false);
 
   const fetchApi = async () => {
     try {
@@ -39,6 +47,7 @@ function ManagePuzzle() {
       console.log(err, err.response);
     }
   };
+  
   const puzzleUpdate=async(e,index,editData,elem)=> {
     // e.preventDefault()
     try {
@@ -122,10 +131,8 @@ function ManagePuzzle() {
                 showData={showData}
                 fields={fields}
                 delete_func={puzzleDelete}
-                edit_func={puzzleUpdate}
+                edit_func={(e, elem) => { setShow(true); setData(elem); }}
                 editableFields={{ component: "puzzle", editArray: ["answer"] }}
-                edit_API={PUZZLE_API.updatePuzzle}
-                action={editPuzzle}
               />
             ) : (
               <div className="align-items-center d-flex justify-content-center pt-5">
@@ -137,6 +144,14 @@ function ManagePuzzle() {
           </div>
         </div>  
       </div>
+      <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
+        <AddPuzzle setShow={setShow} fetchApi={fetchApi} data={data} />
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

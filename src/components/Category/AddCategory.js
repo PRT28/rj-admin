@@ -4,14 +4,13 @@ import axios from "axios";
 import { CATEGORY_API } from "../../util/api";
 import { useCookies } from "react-cookie";
 
-const AddCategory = ({setShow, fetchApi}) => {
+const AddCategory = ({setShow, fetchApi, data}) => {
   const [cookies] = useCookies(["token"]);
-  const navigate = useNavigate();
 
   // Category Data State
   const [categoryData, setCategoryData] = useState({
-    category_title: "",
-    category_description: "",
+    category_title: data ? data.category_title : "",
+    category_description: data ? data.category_description : "",
   });
   // Handle Form Change in Add Category
   const handleChange = (e) => {
@@ -25,30 +24,56 @@ const AddCategory = ({setShow, fetchApi}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send request to the API
-    try {
-      const response = await axios({
-        method: "post",
-        url: CATEGORY_API.createCategory,
-        headers: {
-          Authorization: cookies["token"],
-        },
-        data: categoryData,
-      });
-
-      // Set the values to default and navigate to the Manage Puzzle
-      if (response.status === 201) {
-        alert("Category added successfully");
-        setCategoryData({
-          ...categoryData,
-          category_title: "",
-          category_description: "",
+    if (data) {
+      try {
+        const response = await axios({
+          method: "put",
+          url: `${CATEGORY_API.updateCategory}${data._id}`,
+          headers: {
+            Authorization: cookies["token"],
+          },
+          data: categoryData,
         });
-        fetchApi();
-        setShow(false);
-      };
-    } catch (e) {
-      console.log(e, e.response);
+  
+        // Set the values to default and navigate to the Manage Puzzle
+        if (response.status === 201) {
+          alert("Category added successfully");
+          setCategoryData({
+            ...categoryData,
+            category_title: "",
+            category_description: "",
+          });
+          fetchApi();
+          setShow(false);
+        };
+      } catch (e) {
+        console.log(e, e.response);
+      }
+    } else {
+      try {
+        const response = await axios({
+          method: "post",
+          url: CATEGORY_API.createCategory,
+          headers: {
+            Authorization: cookies["token"],
+          },
+          data: categoryData,
+        });
+  
+        // Set the values to default and navigate to the Manage Puzzle
+        if (response.status === 201) {
+          alert("Category added successfully");
+          setCategoryData({
+            ...categoryData,
+            category_title: "",
+            category_description: "",
+          });
+          fetchApi();
+          setShow(false);
+        };
+      } catch (e) {
+        console.log(e, e.response);
+      }
     }
   };
 

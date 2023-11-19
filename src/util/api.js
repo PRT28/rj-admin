@@ -3,6 +3,8 @@ const baseURL = "https://random-backend.digitalcodemasters.info";
 export const AUTH_API = {
   register: baseURL + "/auth/register",
   login: baseURL + "/auth/login",
+  update: baseURL + "/auth/update",
+  delete: baseURL + "/auth/delete"
 };
 
 export const DASHBOARD_API=baseURL + "/auth/details";
@@ -49,12 +51,14 @@ export const COMMITMENT_API = {
   createCommitment: baseURL + "/commitmentandstatement/",
   getAllCommitment: baseURL + "/commitmentandstatement/commitment",
   deleteCommitment: baseURL + "/commitmentandstatement/delete",
+  updateCommitment: baseURL + "commitmentandstatement/update"
 };
 
 export const STATEMENT_API = {
   createStatement: baseURL + "/commitmentandstatement/",
   getAllStatement: baseURL + "/commitmentandstatement/statement",
   deleteStatment: baseURL + "/commitmentandstatement/delete",
+  updateStatement: baseURL + "commitmentandstatement/update"
 };
 
 export const REPORT_API = {
