@@ -1,0 +1,4 @@
+BACKEND ISSUES : 
+  -USER PAGE :
+   - The delete api is giving unauthorized response while deleting the user.
+   

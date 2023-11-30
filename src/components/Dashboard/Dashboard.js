@@ -19,7 +19,7 @@ function Dashboard() {
   const dispatch = useDispatch();
   const [cookies] = useCookies(["token"]);
 
-  console.log('abc')
+  console.log("abc");
 
   const ResponseArray = [[], [], [], [], [], []];
 
@@ -53,6 +53,7 @@ function Dashboard() {
     // Use Promise.all to fetch data from all APIs concurrently
     Promise.all(api_get.map(fetchApi))
       .then((responses) => {
+        console.log("debugg-1", responses);
         // Set the ResponseArray with the responses
         ResponseArray[0] = responses[0];
         ResponseArray[1] = responses[1];
@@ -88,7 +89,7 @@ function Dashboard() {
           <div className="row">
             <div
               className="col-sm-9 card border mx-2 shadow-lg p-3 mb-5 "
-              style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
+              style={{ borderRadius: "20px", backgroundColor: "#FFEEE0" }}
             >
               <div className="h1">
                 {!loading && dashboardData && (
@@ -99,7 +100,7 @@ function Dashboard() {
             </div>
             <div
               className="col-sm card border mx-2 shadow-lg p-3 pt-5 mb-5 "
-              style={{ borderRadius: "20px", backgroundColor: '#FFEEE0' }}
+              style={{ borderRadius: "20px", backgroundColor: "#FFEEE0" }}
             >
               <div className="h1">
                 {!loading && dashboardData && (

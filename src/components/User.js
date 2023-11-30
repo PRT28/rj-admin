@@ -6,15 +6,15 @@ import DataTable from "./DataTable";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button'
-import Register from './Auth/Register';
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+import Register from "./Auth/Register";
 
 function User() {
   const [cookies] = useCookies(["token"]);
   const dispatch = useDispatch();
-  
-  const [data, setData] = useState(null)
+
+  const [data, setData] = useState(null);
   const [show, setShow] = useState(false);
 
   const fetchApi = async () => {
@@ -26,6 +26,7 @@ function User() {
           Authorization: cookies.token,
         },
       });
+      
       if (response.status === 200) return dispatch(loadUser(response.data));
     } catch (e) {
       console.warn(e);
@@ -45,7 +46,7 @@ function User() {
     } catch (e) {
       console.warn(e);
     }
-  }
+  };
 
   useEffect(() => {
     fetchApi();
@@ -53,17 +54,18 @@ function User() {
 
   // get the data from the state.
   const { loading, data: userData } = useSelector((state) => state.user);
-  const {data: adminData} = useSelector(state => state.admin)
+  const { data: adminData } = useSelector((state) => state.admin);
   const fields = ["username", "email", "status", "zip_code", "gender", "role"];
-  
+
   return (
-    <div className="dashboard container vh-100" style={{overflow: 'scroll'}}>
+    <div className="dashboard container vh-100" style={{ overflow: "scroll" }}>
       <div className="row mt-4  d-flex">
         <div className="col-sm-6 align-items-center d-flex ">
           <span className="d-none text-sm text-light d-sm-inline h5">User</span>
         </div>
 
         <div className="col-sm-6 d-flex flex-row-reverse px-5">
+          
           <Dropdown>
             <Dropdown.Toggle
               variant="success"
@@ -83,25 +85,27 @@ function User() {
               <Dropdown.Item href="#/action-3">Role 3</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          {adminData.role === 0 && <button
-            type="button"
-            className="btn btn-light btn-lg border-2 px-5"
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "#494949",
-              borderColor: "white",
-              marginRight: '10px'
-            }}
-            onClick={() => setShow(true)}
-          >
-            <p className="h5 text-light">
-              <i
-                className="fas fa-plus mx-2"
-                style={{ color: "#ffffff" }}
-              ></i>
-              Add
-            </p>
-          </button>}
+          {adminData.role === 0 && (
+            <button
+              type="button"
+              className="btn btn-light btn-lg border-2 px-5"
+              style={{
+                borderRadius: "20px",
+                backgroundColor: "#494949",
+                borderColor: "white",
+                marginRight: "10px",
+              }}
+              onClick={() => setShow(true)}
+            >
+              <p className="h5 text-light">
+                <i
+                  className="fas fa-plus mx-2"
+                  style={{ color: "#ffffff" }}
+                ></i>
+                Add
+              </p>
+            </button>
+          )}
         </div>
       </div>
       <div className="row">
@@ -110,7 +114,10 @@ function User() {
             <DataTable
               actualData={userData}
               fields={fields}
-              edit_func={(e, elem) => { setShow(true); setData(elem) }}
+              edit_func={(e, elem) => {
+                setShow(true);
+                setData(elem);
+              }}
               delete_func={deleteHandle}
             />
           ) : (
@@ -123,7 +130,7 @@ function User() {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-        <Register loadRegister={setShow} data={data} />
+        <Register fetchUsers={fetchApi} loadRegister={setShow} data={data} />
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Close

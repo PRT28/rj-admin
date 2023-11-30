@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { loadAdmin } from "../../slices/adminSlice"
 import { useCookies } from "react-cookie";
 
-function Register({ loadRegister, data }) {
+function Register({ loadRegister, data,fetchUsers }) {
   const dispatch = useDispatch();
   const [cookies] = useCookies(["token"]);
 
@@ -46,10 +46,11 @@ function Register({ loadRegister, data }) {
             Authorization: cookies["token"],
           }
         });
-  
+         console.log(response)
         if (response.status === 201) {
-          dispatch(loadAdmin(response.data._doc));
+          // dispatch(loadAdmin(response.data._doc));
           // setCookie('token',response.data.tokeconsole.log(e);n);
+          await fetchUsers()
           setLoading(false);
           loadRegister(false);
         }
