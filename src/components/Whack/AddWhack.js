@@ -1,34 +1,108 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StringValidate from "../../util/inputStringValidate";
-import { CATEGORY_API, KEYWORD_API } from "../../util/api";
+import {
+  CATEGORY_API,
+  KEYWORD_API,
+  SUB_CATEGORY_API,
+  SUB_SUB_CATEGORY_API,
+} from "../../util/api";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { Dropdown } from "react-bootstrap";
+import SubSubCategory from "../SubSubCategory/SubSubcategory";
 
 const AddWhack = () => {
   const navigate = useNavigate();
   const [cookies] = useCookies(["token"]);
-  // const dispatch=useDispatch();
-
-  // State for the Checked Input
-  const [checkedState, setCheckedState] = useState();
-  const [selectedKeywords, setSelectedKeywords] = useState([]);
-
   const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
+  const [subSubCategory, setSubSubCategory] = useState([]);
   const [keyword, setKeyword] = useState([]);
 
-  // State for the WhackData Input
-  const [wackData, setWackData] = useState({
+  // State for the Checked Input
+  const [checkedState, setCheckedState] = useState(0);
+  const [selectedKeywords, setSelectedKeywords] = useState([]);
+
+  // State for the whackData Input
+  const [whackData, setwhackData] = useState({
     name: "",
     description: "",
-    category_name: "",
+    category_id: "",
     asset_type: 0,
     // 0- image , 1-video, 2- gif
     keyword_name: [],
     asset_category: 2,
+    is_announcemnet: false,
+    sub_category_id: "dsad",
+    sub_sub_category_id: "dsdas",
     // 0- Asset, 1- Joy, 2- Whack
   });
+
+  const handleSetAnnouncement = () => {
+    setwhackData({ ...whackData, is_announcemnet: !whackData.is_announcemnet });
+  };
+
+  const categoryFetch = async () => {
+    const response = await axios({
+      method: "get",
+      url: CATEGORY_API.getAllCategory,
+      headers: {
+        Authorization: cookies.token,
+      },
+    });
+    setCategory(response.data);
+  };
+  const subCategoryFetch = async () => {
+    const response = await axios({
+      method: "get",
+      url: SUB_CATEGORY_API.getAllCategory,
+      headers: {
+        Authorization: cookies.token,
+      },
+    });
+    setSubCategory(response.data);
+  };
+
+  const subSubCategoryFetch = async () => {
+    const response = await axios({
+      method: "get",
+      url: SUB_SUB_CATEGORY_API.getAllCategory,
+      headers: {
+        Authorization: cookies.token,
+      },
+    });
+
+    setSubSubCategory(response.data);
+  };
+
+  const keywordFetch = async () => {
+    const response = await axios({
+      method: "get",
+      url: KEYWORD_API.getAllKeyword,
+      headers: {
+        Authorization: cookies.token,
+      },
+    });
+
+    setKeyword(response.data);
+  };
+  useEffect(() => {
+    keywordFetch();
+    subCategoryFetch();
+    categoryFetch();
+    subSubCategoryFetch();
+  }, []);
+
+  // Handle the Form Data Change
+  const handleChange = (e) => {
+    let value = StringValidate(e.target.value);
+
+    setwhackData({
+      ...whackData,
+      [e.target.name]: e.target.name !== "description" ? value : e.target.value,
+    });
+  };
 
   // Handle the checkbox input
   const handleCheckboxChange = (event) => {
@@ -48,39 +122,6 @@ const AddWhack = () => {
     }
   };
 
-  const categoryFetch = async () => {
-    const response = await axios({
-      method: "get",
-      url: CATEGORY_API.getAllCategory,
-      headers: {
-        Authorization: cookies.token,
-      },
-    });
-    setCategory(response.data);
-  };
-  categoryFetch();
-
-  const keywordFetch = async () => {
-    const response = await axios({
-      method: "get",
-      url: KEYWORD_API.getAllKeyword,
-      headers: {
-        Authorization: cookies.token,
-      },
-    });
-    setKeyword(response.data);
-  };
-  keywordFetch();
-
-  // Handle the Form Data Change
-  const handleChange = (e) => {
-    let value = StringValidate(e.target.value);
-    setWackData({
-      ...wackData,
-      [e.target.name]: e.target.name !== "description" ? value : e.target.value,
-    });
-  };
-
   // Handle the Form Data on Submit
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,28 +129,29 @@ const AddWhack = () => {
     // regex to check for any unusual pattern or palyoad
     const stringPattern = /^(?!.*__)[a-zA-Z0-9_]+$/;
 
-    navigate("/joy/add/type", {
-      state: { ...wackData, keyword_name: selectedKeywords },
+    navigate("/whack/add/type", {
+      state: { ...whackData, keyword_name: selectedKeywords },
     });
-    return setWackData({
-      ...wackData,
+    return setwhackData({
+      ...whackData,
       name: "",
       description: "",
-      category_name: "",
+      category_id: "",
       asset_type: 0,
       // 0- image , 1-video, 2- gif
       asset_category: 2,
+      is_announcemnet: false,
+      sub_category_id: "dsad",
+      sub_sub_category_id: "dsdas",
       // 1-Joy 2-Wack
     });
   };
-  const whackType = ["video", "audio", "gif"];
+  const joyType = ["video", "audio", "gif"];
 
   return (
     <div className="dashboard container mb-5 vh-100">
       <div className="nav-items fs-4 pb-3">
-        <span className="d-none text-sm text-dark d-sm-inline h5">
-          Add Wack
-        </span>
+        <span className="d-none text-sm text-dark d-sm-inline h5">Add Whack</span>
       </div>
       <div className="flex-row ">
         <div
@@ -117,7 +159,7 @@ const AddWhack = () => {
           style={{ borderRadius: "20px" }}
         >
           <div className=" col-md-6  align-items-center d-flex justify-content-center overflow-hidden ">
-            {/* Add Wack Form */}
+            {/* Add Joy Form */}
             <form
               className="p-5"
               onSubmit={(e) => {
@@ -125,15 +167,15 @@ const AddWhack = () => {
               }}
             >
               <div className=" form-outline mb-3 ">
-                <label className="form-label h5" htmlFor="wackName">
-                  Wack Name
+                <label className="form-label h5" htmlFor="joyName">
+                  Joy Name
                 </label>
                 <input
                   type="text"
                   name="name"
-                  value={wackData.name}
+                  value={whackData.name}
                   onChange={(e) => handleChange(e)}
-                  id="wackName"
+                  id="joyName"
                   className="form-control form-control-lg border-1 border-dark"
                   maxLength="256"
                   style={{ fontSize: "15px", borderRadius: "15px" }}
@@ -149,8 +191,8 @@ const AddWhack = () => {
                     id="category"
                     className="w-100 p-2 border-dark"
                     style={{ borderRadius: "15px", color: "black" }}
-                    name="category_name"
-                    value={wackData.category_name}
+                    name="category_id"
+                    value={whackData.category_id}
                     onChange={(e) => handleChange(e)}
                   >
                     <option> Select an option </option>
@@ -158,10 +200,7 @@ const AddWhack = () => {
                     {category.length !== 0 && (
                       <>
                         {category.map((el) => (
-                          <option
-                            value={el.category_title}
-                            key={el.category_title}
-                          >
+                          <option value={el._id} key={el.category_id}>
                             {el.category_title}
                           </option>
                         ))}
@@ -170,7 +209,63 @@ const AddWhack = () => {
                   </select>
                 </div>
               </div>
-              {/* Description */}
+
+              <div className="form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="category">
+                  SubCategory
+                </label>
+                <div className="w-100">
+                  <select
+                    id="subcategory"
+                    className="w-100 p-2 border-dark"
+                    style={{ borderRadius: "15px", color: "black" }}
+                    name="sub_category_id"
+                    value={whackData.sub_category_id}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option> Select an option </option>
+                    {/* Map all the category recieved from the Category API */}
+                    {subCategory.length !== 0 && (
+                      <>
+                        {subCategory.map((el) => (
+                          <option value={el._id} key={el._id}>
+                            {el.title}
+                          </option>
+                        ))}
+                      </>
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="category">
+                  Sub_Sub_Category
+                </label>
+                <div className="w-100">
+                  <select
+                    id="category"
+                    className="w-100 p-2 border-dark"
+                    style={{ borderRadius: "15px", color: "black" }}
+                    name="category_id"
+                    value={whackData.sub_sub_category_id}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option> Select an option </option>
+                    {/* Map all the category recieved from the Category API */}
+                    {subSubCategory.length !== 0 && (
+                      <>
+                        {subSubCategory.map((el) => (
+                          <option value={el._id} key={el._id}>
+                            {el.title}
+                          </option>
+                        ))}
+                      </>
+                    )}
+                  </select>
+                </div>
+              </div>
+              {/* Desciption */}
               <div className=" form-outline mb-3 ">
                 <label className="form-label h5" htmlFor="description">
                   Description
@@ -179,7 +274,7 @@ const AddWhack = () => {
                   type="text"
                   name="description"
                   id="description"
-                  value={wackData.description}
+                  value={whackData.description}
                   onChange={(e) => handleChange(e)}
                   className="form-control form-control-lg border-1 border-dark"
                   maxLength="256"
@@ -198,7 +293,7 @@ const AddWhack = () => {
                   <Dropdown.Toggle
                     variant="success"
                     id="dropdown-basic"
-                    // name={joyData.keyword_name}
+                    // name={whackData.keyword_name}
                     className="w-100 p-2 border-dark bg-transparent"
                     style={{ borderRadius: "15px", color: "black" }}
                   >
@@ -235,6 +330,24 @@ const AddWhack = () => {
               </div>
 
               {/* Checkbox Input */}
+              <div
+                className="my-4"
+                style={{ display: "flex", alignItems: "center", gap: 5 }}
+                onClick={handleSetAnnouncement}
+              >
+                <div
+                  style={{
+                    padding: "10px",
+                    border: "1px solid black",
+                    width: "fit-content",
+                    background: whackData.is_announcemnet ? "blue" : "white",
+                    borderRadius: "40px",
+                  }}
+                ></div>
+
+                <div className="h5 mt-2">Announcement</div>
+              </div>
+
               <div className=" form-outline mb-3 ">
                 <label className="form-label h5" htmlFor="asset_type">
                   Choose File Type
@@ -289,7 +402,6 @@ const AddWhack = () => {
                   </div>
                 </div>
               </div>
-
               <div className="text-center text-lg-start mt-4 pt-2 w-100">
                 <button
                   type="submit"
@@ -310,9 +422,9 @@ const AddWhack = () => {
           </div>
           <div className="col-md-6 d-flex align-items-center d-flex justify-content-center">
             <img
-              src="https://i.pinimg.com/564x/a9/46/ed/a946ed81519c8be61034d791739ea648.jpg"
+              src="https://i.pinimg.com/564x/f2/09/13/f20913b52be1340616c79badc63caaf0.jpg"
               className="img-fluid  d-none d-sm-block h-100 align-items-center d-flex justify-content-center"
-              alt="Sample whack"
+              alt="Sample joy"
             />
           </div>
         </div>

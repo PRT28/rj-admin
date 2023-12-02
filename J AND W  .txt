@@ -1,0 +1,15 @@
+J AND W : 
+
+-CATOGERY - ID and same for below : 
+
+-subcategory (DD)
+-sub-subcategory (DD)
+---------------------------------
+
+-is_announcement (BOOLEAN)
+
+PANELS : 
+- Subcategory : 
+    - same look but diff apis
+- Sub-sub category : 
+     - same look but diff apis

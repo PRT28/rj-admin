@@ -4,13 +4,13 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import StringValidate from "../../util/inputStringValidate";
 
-const AddKeyword = ({data, setShow}) => {
+const AddKeyword = ({ data, setShow, fetchKeyword }) => {
   const [cookies] = useCookies(["token"]);
 
   // Keyword Data State
   const [keywordData, setKeywordData] = useState({
-    title: data ? data.title :"",
-    description:  data ? data.description : "",
+    title: data ? data.title : "",
+    description: data ? data.description : "",
   });
 
   // Fetching the user Data from redux state
@@ -30,6 +30,7 @@ const AddKeyword = ({data, setShow}) => {
 
     if (data) {
       try {
+        console.log(data)
         const response = await axios({
           method: "put",
           url: `${KEYWORD_API.updateKeyword}?id=${data._id}`,
@@ -38,15 +39,18 @@ const AddKeyword = ({data, setShow}) => {
           },
           data: keywordData,
         });
-  
+
         // Set the values to default and navigate to the Manage Keywords
         setKeywordData({
           ...keywordData,
           title: "",
           description: "",
         });
-  
-        if (response.status === 201) return setShow(false);
+        console.log("working fine till here..");
+
+        setShow(false);
+        console.log("working fine till here..");
+        await fetchKeyword();
       } catch (e) {
         console.log("From AddKeyword Error:", e);
       }
@@ -60,14 +64,14 @@ const AddKeyword = ({data, setShow}) => {
           },
           data: keywordData,
         });
-  
+
         // Set the values to default and navigate to the Manage Keywords
         setKeywordData({
           ...keywordData,
           title: "",
           description: "",
         });
-  
+
         if (response.status === 201) return setShow(false);
       } catch (e) {
         console.log("From AddKeyword Error:", e);
@@ -140,7 +144,7 @@ const AddKeyword = ({data, setShow}) => {
                     paddingRight: "2.5rem",
                     borderRadius: "20px",
                     backgroundColor: "#3C8C7E",
-                    marginTop: '10px'
+                    marginTop: "10px",
                   }}
                   onClick={() => setShow(false)}
                 >

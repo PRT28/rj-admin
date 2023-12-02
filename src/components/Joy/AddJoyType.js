@@ -38,7 +38,7 @@ const AddJoyType = () => {
   // Handle Complete Joy Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(joyData);
     // Form Payload to send
     let formPayload;
     if (joyData.upload_type == 0) {
@@ -46,10 +46,13 @@ const AddJoyType = () => {
         // Common Data
         name: joyData.name,
         description: joyData.description,
-        category_name: joyData.category_name,
+        category_id: joyData.category_id,
         asset_type: joyData.asset_type,
         keyword_name: joyData.keyword_name,
         asset_category: joyData.asset_category,
+        is_announcemnet: joyData.is_announcemnet,
+        sub_category_id: joyData.sub_category_id,
+        sub_sub_category_id: joyData.sub_sub_category_id,
         // Specific Data
         upload_type: 0,
         url: joyData.url,
@@ -59,10 +62,13 @@ const AddJoyType = () => {
         // Common Data
         name: joyData.name,
         description: joyData.description,
-        category_name: joyData.category_name,
+        category_id: joyData.category_id,
         asset_type: joyData.asset_type,
         keyword_name: joyData.keyword_name,
         asset_category: joyData.asset_category,
+        is_announcemnet: joyData.is_announcemnet,
+        sub_category_id: joyData.sub_category_id,
+        sub_sub_category_id: joyData.sub_sub_category_id,
         // Specific Data
         upload_type: 1,
         url: joyFile,
@@ -71,6 +77,7 @@ const AddJoyType = () => {
 
     // Send request to the API
     try {
+      console.log(formPayload);
       const response = await axios({
         method: "post",
         url: JOY_API.createJoy,

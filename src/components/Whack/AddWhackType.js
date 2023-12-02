@@ -48,6 +48,9 @@ const AddWhackType = () => {
         asset_type: wackData.asset_type,
         keyword_name: wackData.keyword_name,
         asset_category: wackData.asset_category,
+        is_announcemnet: wackData.is_announcemnet,
+        sub_category_id: wackData.sub_category_id,
+        sub_sub_category_id: wackData.sub_sub_category_id,
         // Specific Data
         upload_type: 0,
         url: wackData.url,
@@ -61,6 +64,9 @@ const AddWhackType = () => {
         asset_type: wackData.asset_type,
         keyword_name: wackData.keyword_name,
         asset_category: wackData.asset_category,
+        is_announcemnet: wackData.is_announcemnet,
+        sub_category_id: wackData.sub_category_id,
+        sub_sub_category_id: wackData.sub_sub_category_id,
         // Specific Data
         upload_type: 1,
         url: wackFile,
@@ -68,6 +74,7 @@ const AddWhackType = () => {
     }
     // Send request to the API
     try {
+      console.log("dsadas", formPayload);
       const response = await axios({
         method: "post",
         url: WACK_API.createWack,

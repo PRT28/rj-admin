@@ -26,7 +26,7 @@ function User() {
           Authorization: cookies.token,
         },
       });
-      
+
       if (response.status === 200) return dispatch(loadUser(response.data));
     } catch (e) {
       console.warn(e);
@@ -48,15 +48,25 @@ function User() {
     }
   };
 
+  const closeModal = () => {
+    setShow(false);
+  };
+
   useEffect(() => {
     fetchApi();
+    console.log("hii")
   }, [dispatch]);
+
+  const [query, setQuery] = useState("");
 
   // get the data from the state.
   const { loading, data: userData } = useSelector((state) => state.user);
   const { data: adminData } = useSelector((state) => state.admin);
   const fields = ["username", "email", "status", "zip_code", "gender", "role"];
 
+  const filteredData = userData?.filter((data) =>
+    data.username.toLowerCase().startsWith(query.toLowerCase())
+  );
   return (
     <div className="dashboard container vh-100" style={{ overflow: "scroll" }}>
       <div className="row mt-4  d-flex">
@@ -65,7 +75,6 @@ function User() {
         </div>
 
         <div className="col-sm-6 d-flex flex-row-reverse px-5">
-          
           <Dropdown>
             <Dropdown.Toggle
               variant="success"
@@ -108,11 +117,30 @@ function User() {
           )}
         </div>
       </div>
+      <div className="row mt-4 mb-3 d-flex">
+        <div className="col-sm-12 align-items-center d-flex ">
+          <input
+            type="text"
+            name="searchText"
+            className="form-control shadow-lg p-2 px-3"
+            placeholder="Search names here.."
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            style={{
+              borderRadius: "20px",
+              backgroundColor: "#5D5D5D",
+              color: "#FFF",
+            }}
+            onChange={(e) => setQuery(e.target.value)}
+            value={query}
+          />
+        </div>
+      </div>
       <div className="row">
         <div className=" ">
           {!loading && userData ? (
             <DataTable
-              actualData={userData}
+              actualData={filteredData}
               fields={fields}
               edit_func={(e, elem) => {
                 setShow(true);
@@ -130,12 +158,12 @@ function User() {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-        <Register fetchUsers={fetchApi} loadRegister={setShow} data={data} />
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
+        <Register
+          closeModal={closeModal}
+          fetchUsers={fetchApi}
+          loadRegister={setShow}
+          data={data}
+        />
       </Modal>
     </div>
   );

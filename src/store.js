@@ -10,6 +10,8 @@ import whackReducer from "./slices/whackSlice";
 import commitmentReducer from "./slices/commitmentSlice";
 import statementReducer from "./slices/statementSlice";
 import reportReducer from "./slices/reportSlice";
+import subCategoryReducer from "./slices/subcategorySlice";
+
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +26,6 @@ export const store = configureStore({
     commitment: commitmentReducer,
     statement: statementReducer,
     report: reportReducer,
+    subcategory : subCategoryReducer
   },
 });

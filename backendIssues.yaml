@@ -1,4 +1,8 @@
-BACKEND ISSUES : 
-  -USER PAGE :
-   - The delete api is giving unauthorized response while deleting the user.
-   
+BACKEND ISSUES:
+  -USER PAGE:
+    - The delete api is giving unauthorized response while deleting the user.
+  -JOY PAGE :
+    - The api for creating joy is not working properly. It gives error 409 when we click the submit button.
+  - STATEMENT API : 
+     - Statement API is not working properly while fetching the statements.
+  

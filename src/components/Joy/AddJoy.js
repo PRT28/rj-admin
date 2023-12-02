@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StringValidate from "../../util/inputStringValidate";
-import { CATEGORY_API, KEYWORD_API } from "../../util/api";
+import {
+  CATEGORY_API,
+  KEYWORD_API,
+  SUB_CATEGORY_API,
+  SUB_SUB_CATEGORY_API,
+} from "../../util/api";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { Dropdown } from "react-bootstrap";
+import SubSubCategory from "../SubSubCategory/SubSubcategory";
 
 const AddJoy = () => {
   const navigate = useNavigate();
   const [cookies] = useCookies(["token"]);
-
   const [category, setCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
+  const [subSubCategory, setSubSubCategory] = useState([]);
   const [keyword, setKeyword] = useState([]);
 
   // State for the Checked Input
@@ -21,13 +28,20 @@ const AddJoy = () => {
   const [joyData, setJoyData] = useState({
     name: "",
     description: "",
-    category_name: "",
+    category_id: "",
     asset_type: 0,
     // 0- image , 1-video, 2- gif
     keyword_name: [],
     asset_category: 1,
+    is_announcemnet: false,
+    sub_category_id: "dsad",
+    sub_sub_category_id: "dsdas",
     // 0- Asset, 1- Joy, 2- Whack
   });
+
+  const handleSetAnnouncement = () => {
+    setJoyData({ ...joyData, is_announcemnet: !joyData.is_announcemnet });
+  };
 
   const categoryFetch = async () => {
     const response = await axios({
@@ -39,7 +53,28 @@ const AddJoy = () => {
     });
     setCategory(response.data);
   };
-  categoryFetch();
+  const subCategoryFetch = async () => {
+    const response = await axios({
+      method: "get",
+      url: SUB_CATEGORY_API.getAllCategory,
+      headers: {
+        Authorization: cookies.token,
+      },
+    });
+    setSubCategory(response.data);
+  };
+
+  const subSubCategoryFetch = async () => {
+    const response = await axios({
+      method: "get",
+      url: SUB_SUB_CATEGORY_API.getAllCategory,
+      headers: {
+        Authorization: cookies.token,
+      },
+    });
+
+    setSubSubCategory(response.data);
+  };
 
   const keywordFetch = async () => {
     const response = await axios({
@@ -49,13 +84,20 @@ const AddJoy = () => {
         Authorization: cookies.token,
       },
     });
+
     setKeyword(response.data);
   };
-  keywordFetch();
+  useEffect(() => {
+    keywordFetch();
+    subCategoryFetch();
+    categoryFetch();
+    subSubCategoryFetch();
+  }, []);
 
   // Handle the Form Data Change
   const handleChange = (e) => {
     let value = StringValidate(e.target.value);
+
     setJoyData({
       ...joyData,
       [e.target.name]: e.target.name !== "description" ? value : e.target.value,
@@ -94,14 +136,17 @@ const AddJoy = () => {
       ...joyData,
       name: "",
       description: "",
-      category_name: "",
+      category_id: "",
       asset_type: 0,
       // 0- image , 1-video, 2- gif
       asset_category: 1,
+      is_announcemnet: false,
+      sub_category_id: "dsad",
+      sub_sub_category_id: "dsdas",
       // 1-Joy 2-Wack
     });
   };
-
+  console.log(joyData);
   const joyType = ["video", "audio", "gif"];
 
   return (
@@ -147,8 +192,8 @@ const AddJoy = () => {
                     id="category"
                     className="w-100 p-2 border-dark"
                     style={{ borderRadius: "15px", color: "black" }}
-                    name="category_name"
-                    value={joyData.category_name}
+                    name="category_id"
+                    value={joyData.category_id}
                     onChange={(e) => handleChange(e)}
                   >
                     <option> Select an option </option>
@@ -156,10 +201,7 @@ const AddJoy = () => {
                     {category.length !== 0 && (
                       <>
                         {category.map((el) => (
-                          <option
-                            value={el.category_title}
-                            key={el.category_title}
-                          >
+                          <option value={el._id} key={el.category_id}>
                             {el.category_title}
                           </option>
                         ))}
@@ -169,6 +211,61 @@ const AddJoy = () => {
                 </div>
               </div>
 
+              <div className="form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="category">
+                  SubCategory
+                </label>
+                <div className="w-100">
+                  <select
+                    id="subcategory"
+                    className="w-100 p-2 border-dark"
+                    style={{ borderRadius: "15px", color: "black" }}
+                    name="sub_category_id"
+                    value={joyData.sub_category_id}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option> Select an option </option>
+                    {/* Map all the category recieved from the Category API */}
+                    {subCategory.length !== 0 && (
+                      <>
+                        {subCategory.map((el) => (
+                          <option value={el._id} key={el._id}>
+                            {el.title}
+                          </option>
+                        ))}
+                      </>
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-outline mb-3 ">
+                <label className="form-label h5" htmlFor="category">
+                  Sub_Sub_Category
+                </label>
+                <div className="w-100">
+                  <select
+                    id="category"
+                    className="w-100 p-2 border-dark"
+                    style={{ borderRadius: "15px", color: "black" }}
+                    name="category_id"
+                    value={joyData.sub_sub_category_id}
+                    onChange={(e) => handleChange(e)}
+                  >
+                    <option> Select an option </option>
+                    {/* Map all the category recieved from the Category API */}
+                    {subSubCategory.length !== 0 && (
+                      <>
+                        {subSubCategory.map((el) => (
+                          <option value={el._id} key={el._id}>
+                            {el.title}
+                          </option>
+                        ))}
+                      </>
+                    )}
+                  </select>
+                </div>
+              </div>
               {/* Desciption */}
               <div className=" form-outline mb-3 ">
                 <label className="form-label h5" htmlFor="description">
@@ -234,6 +331,24 @@ const AddJoy = () => {
               </div>
 
               {/* Checkbox Input */}
+              <div
+                className="my-4"
+                style={{ display: "flex", alignItems: "center", gap: 5 }}
+                onClick={handleSetAnnouncement}
+              >
+                <div
+                  style={{
+                    padding: "10px",
+                    border: "1px solid black",
+                    width: "fit-content",
+                    background: joyData.is_announcemnet ? "blue" : "white",
+                    borderRadius: "40px",
+                  }}
+                ></div>
+
+                <div className="h5 mt-2">Announcement</div>
+              </div>
+
               <div className=" form-outline mb-3 ">
                 <label className="form-label h5" htmlFor="asset_type">
                   Choose File Type

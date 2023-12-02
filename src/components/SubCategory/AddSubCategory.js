@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CATEGORY_API } from "../../util/api";
+import { SUB_CATEGORY_API } from "../../util/api";
 import { useCookies } from "react-cookie";
 
-const AddCategory = ({ setShow, fetchApi, data }) => {
+const AddSubCategory = ({ setShow, fetchApi, data }) => {
   const [cookies] = useCookies(["token"]);
 
+  // {
+  //   "title": "any",
+  //   "description": "any",
+  //   "category_id": "any"
+  // }
+
   // Category Data State
-  const [categoryData, setCategoryData] = useState({
-    category_title: data ? data.category_title : "",
-    category_description: data ? data.category_description : "",
+  const [subCategoryData, setsubCategoryData] = useState({
+    title: data ? data.title : "",
+    description: data ? data.description : "",
   });
   // Handle Form Change in Add Category
   const handleChange = (e) => {
-    setCategoryData({
-      ...categoryData,
+    setsubCategoryData({
+      ...subCategoryData,
       [e.target.name]: e.target.value.toLowerCase(),
     });
   };
@@ -23,24 +29,24 @@ const AddCategory = ({ setShow, fetchApi, data }) => {
   // Handle Complete Category Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(subCategoryData);
     if (data) {
       try {
         const response = await axios({
           method: "put",
-          url: `${CATEGORY_API.updateCategory}${data._id}`,
+          url: `${SUB_CATEGORY_API.updateCategory}${data._id}`,
           headers: {
             Authorization: cookies["token"],
           },
-          data: categoryData,
+          data: subCategoryData,
         });
 
         // Set the values to default and navigate to the Manage Puzzle
         if (response.status === 201) {
-          setCategoryData({
-            ...categoryData,
-            category_title: "",
-            category_description: "",
+          setsubCategoryData({
+            ...subCategoryData,
+            title: "",
+            description: "",
           });
           fetchApi();
           setShow(false);
@@ -52,20 +58,20 @@ const AddCategory = ({ setShow, fetchApi, data }) => {
       try {
         const response = await axios({
           method: "post",
-          url: CATEGORY_API.createCategory,
+          url: SUB_CATEGORY_API.createCategory,
           headers: {
             Authorization: cookies["token"],
           },
-          data: categoryData,
+          data: subCategoryData,
         });
 
         // Set the values to default and navigate to the Manage Puzzle
         if (response.status === 201) {
           alert("Category added successfully");
-          setCategoryData({
-            ...categoryData,
-            category_title: "",
-            category_description: "",
+          setsubCategoryData({
+            ...subCategoryData,
+            title: "",
+            description: "",
           });
           fetchApi();
           setShow(false);
@@ -98,12 +104,12 @@ const AddCategory = ({ setShow, fetchApi, data }) => {
                   </label>
                   <input
                     type="text"
-                    name="category_title"
+                    name="title"
                     id="categoryTitle"
                     className="form-control form-control-lg border-1 border-dark"
                     maxLength="256"
                     style={{ fontSize: "15px", borderRadius: "15px" }}
-                    value={categoryData.category_title}
+                    value={subCategoryData.title}
                     onChange={(e) => handleChange(e)}
                   />
                 </div>
@@ -116,12 +122,12 @@ const AddCategory = ({ setShow, fetchApi, data }) => {
                   </label>
                   <input
                     type="text"
-                    name="category_description"
+                    name="description"
                     id="categoryDescription"
                     className="form-control form-control-lg border-1 border-dark"
                     minLength="8"
                     style={{ fontSize: "15px", borderRadius: "15px" }}
-                    value={categoryData.category_description}
+                    value={subCategoryData.description}
                     onChange={(e) => handleChange(e)}
                   />
                 </div>
@@ -160,4 +166,4 @@ const AddCategory = ({ setShow, fetchApi, data }) => {
   );
 };
 
-export default AddCategory;
+export default AddSubCategory;

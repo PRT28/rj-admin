@@ -8,21 +8,21 @@ import { CATEGORY_API } from "../../util/api";
 import DataTable from "../DataTable";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button"
+import Button from "react-bootstrap/Button";
 
 const Statement = () => {
   const [cookies] = useCookies(["token"]);
   const dispatch = useDispatch();
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(null);
   const [show, setShow] = useState(false);
 
   const [statement, setStatement] = useState({
-    is_commitment: 0,
+    is_commitment: 1,
     suggestion_text: "",
-    category_text: ''
+    category_text: "",
   });
 
-  const { loading:categoryLoading , data: categoryData } = useSelector(
+  const { loading: categoryLoading, data: categoryData } = useSelector(
     (state) => state.category
   );
 
@@ -35,6 +35,7 @@ const Statement = () => {
           Authorization: cookies.token,
         },
       });
+
       if (response.status == 200) dispatch(loadStatement(response.data));
     } catch (e) {
       console.warn(e);
@@ -48,15 +49,13 @@ const Statement = () => {
         url: STATEMENT_API.deleteStatment + `/${elem._id}`,
         headers: {
           Authorization: cookies.token,
-        }
+        },
       });
-      if (response.status === 200)
-        return fetchStatement();
+      if (response.status === 200) return fetchStatement();
     } catch (error) {
       console.log(error, error.response);
     }
   };
-
 
   const fetchCategories = async () => {
     try {
@@ -87,32 +86,41 @@ const Statement = () => {
 
     if (data) {
       try {
-        if (statement.category_text === '' || statement.suggestion_text === '') {
+        if (
+          statement.category_text === "" ||
+          statement.suggestion_text === ""
+        ) {
           alert("Make sure to write a text and select a catgory");
           return;
         }
         const response = await axios({
           method: "put",
-          url:`${STATEMENT_API.updateStatement}/${data._id}`,
+          url: `${STATEMENT_API.updateStatement}/${data._id}`,
           headers: {
             Authorization: cookies.token,
           },
           data: statement,
         });
-        if (response.status == 201) {
-          setStatement({ ...statement, suggestion_text: "", category_text: '' });
-          dispatch(loadStatement(response.data));
-          fetchStatement();
-          setShow(false);
-          setData(null);
-          return;
-        }
+
+        setStatement({
+          ...statement,
+          suggestion_text: "",
+          category_text: "",
+        });
+
+        await fetchStatement();
+        setShow(false);
+        setData(null);
+        return;
       } catch (e) {
         console.warn(e);
       }
     } else {
       try {
-        if (statement.category_text === '' || statement.suggestion_text === '') {
+        if (
+          statement.category_text === "" ||
+          statement.suggestion_text === ""
+        ) {
           alert("Make sure to write a text and select a catgory");
           return;
         }
@@ -124,23 +132,31 @@ const Statement = () => {
           },
           data: statement,
         });
-        if (response.status == 201) {
-          setStatement({ ...statement, suggestion_text: "", category_text: '' });
-          return dispatch(loadStatement(response.data));
-        }
+
+        setStatement({
+          ...statement,
+          suggestion_text: "",
+          category_text: "",
+        });
+        console.log(response.data);
+        await fetchStatement();
       } catch (e) {
         console.warn(e, e.response);
       }
-    };
     }
-
-    
+  };
 
   const { data: statementData, loading } = useSelector(
     (store) => store.statement
   );
 
-  const fields = ["commitment_text", "user_id"];
+  const [query, setQuery] = useState("");
+
+  const filteredData = statementData?.filter((data) =>
+    data.suggestion_text.toLowerCase().startsWith(query.toLowerCase())
+  );
+  console.log(statementData);
+  const fields = ["suggestion_text", "user_id"];
 
   return (
     <div className="dashboard container mb-5 ">
@@ -162,32 +178,46 @@ const Statement = () => {
                 </label>
                 <input
                   type="text"
-                  name="commitment_text"
+                  name="suggestion_text"
                   id="statementText"
-                  value={statement.commitment_text}
-                  onChange={(e) =>
+                  value={statement.suggestion_text}
+                  onChange={(e) => {
+                    console.log(e.target.name);
                     setStatement({
                       ...statement,
                       [e.target.name]: e.target.value,
-                    })
-                  }
+                    });
+                  }}
                   className="form-control form-control-lg border-1 border-dark"
                   maxLength="256"
                   style={{ fontSize: "15px", borderRadius: "15px" }}
                 />
               </div>
 
-              {!categoryLoading && <div className=" form-outline mb-3 ">
-                <label className="form-label h5" htmlFor="form3Example3">
-                  Category
-                </label>
-                <select className="form-control form-control-lg border-1 border-dark" onChange={(e) => setStatement({...statement, category_text: e.target.value})}>
-                  <option selected hidden value="" >Select a value</option>
-                  {
-                    categoryData.map(d => <option>{d.category_title}</option>)
-                  }
-                </select>
-              </div>}
+              {!categoryLoading && (
+                <div className=" form-outline mb-3 ">
+                  <label className="form-label h5" htmlFor="form3Example3">
+                    Category
+                  </label>
+                  <select
+                    className="form-control form-control-lg border-1 border-dark"
+                    onChange={(e) =>
+                      setStatement({
+                        ...statement,
+                        category_text: e.target.value,
+                      })
+                    }
+                    value={statement.category_text}
+                  >
+                    <option selected hidden>
+                      Select a value
+                    </option>
+                    {categoryData.map((d) => (
+                      <option>{d.category_title}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div className="text-center text-lg-start mt-4 pt-2 w-100">
                 <button
@@ -214,19 +244,37 @@ const Statement = () => {
           </div>
         </div>
       </div>
-
+      <div className="row mt-4 mb-3 d-flex">
+        <div className="col-sm-12 align-items-center d-flex ">
+          <input
+            type="text"
+            name="searchText"
+            className="form-control shadow-lg p-2 px-3"
+            placeholder="Search statements here.."
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            style={{
+              borderRadius: "20px",
+              backgroundColor: "#5D5D5D",
+              color: "#FFF",
+            }}
+            onChange={(e) => setQuery(e.target.value)}
+            value={query}
+          />
+        </div>
+      </div>
       {/* DataTable to show the statements */}
       <div>
         <div style={{ borderRadius: "20px" }}>
           {!loading && statementData ? (
             <DataTable
-              actualData={statementData}
+              actualData={filteredData}
               delete_func={statementDelete}
               fields={fields}
               action={loadStatement}
               // editableFields={{
               //   component: "commitment",
-              //   editArray: ["commitment_text"],
+              //   editArray: ["suggestion_text"],
               // }}
             />
           ) : (
@@ -239,52 +287,61 @@ const Statement = () => {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-      <form className="" onSubmit={(e) => handleSubmit(e)}>
-              <div className=" form-outline mb-3 ">
-                <label className="form-label h5" htmlFor="form3Example3">
-                  Commitment
-                </label>
-                <input
-                  type="text"
-                  name="suggestion_text"
-                  id="form3Example3"
-                  value={data?.suggestion_text}
-                  onChange={(e) =>
-                    setStatement({
-                      ...statement,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
-                  className="form-control form-control-lg border-1 border-dark"
-                  maxLength="256"
-                  style={{ fontSize: "15px", borderRadius: "15px" }}
-                />
-              </div>
-              {!categoryLoading && <div className=" form-outline mb-3 ">
-                <label className="form-label h5" htmlFor="form3Example3">
-                  Category
-                </label>
-                <select className="form-control form-control-lg border-1 border-dark" onChange={(e) => setStatement({...statement, category_text: e.target.value})}>
-                  {
-                    categoryData.map(d => <option selected={data?.category_title === d.category_title}>{d.category_title}</option>)
-                  }
-                </select>
-              </div>}
-              <div className="text-center text-lg-start mt-4 pt-2 w-100">
-                <button
-                  type="submit"
-                  className="btn  btn-lg w-100"
-                  style={{
-                    paddingLeft: "2.5rem",
-                    paddingRight: "2.5rem",
-                    borderRadius: "20px",
-                    backgroundColor: "#3C8C7E",
-                  }}
-                >
-                  <p className="h4 text-light">Submit</p>
-                </button>
-              </div>
-            </form>
+        <form className="" onSubmit={(e) => handleSubmit(e)}>
+          <div className=" form-outline mb-3 ">
+            <label className="form-label h5" htmlFor="form3Example3">
+              Statement
+            </label>
+            <input
+              type="text"
+              name="suggestion_text"
+              id="form3Example3"
+              value={data?.suggestion_text}
+              onChange={(e) =>
+                setStatement({
+                  ...statement,
+                  [e.target.name]: e.target.value,
+                })
+              }
+              className="form-control form-control-lg border-1 border-dark"
+              maxLength="256"
+              style={{ fontSize: "15px", borderRadius: "15px" }}
+            />
+          </div>
+          {!categoryLoading && (
+            <div className=" form-outline mb-3 ">
+              <label className="form-label h5" htmlFor="form3Example3">
+                Category
+              </label>
+              <select
+                className="form-control form-control-lg border-1 border-dark"
+                onChange={(e) =>
+                  setStatement({ ...statement, category_text: e.target.value })
+                }
+              >
+                {categoryData.map((d) => (
+                  <option selected={data?.category_title === d.category_title}>
+                    {d.category_title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="text-center text-lg-start mt-4 pt-2 w-100">
+            <button
+              type="submit"
+              className="btn  btn-lg w-100"
+              style={{
+                paddingLeft: "2.5rem",
+                paddingRight: "2.5rem",
+                borderRadius: "20px",
+                backgroundColor: "#3C8C7E",
+              }}
+            >
+              <p className="h4 text-light">Submit</p>
+            </button>
+          </div>
+        </form>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Close

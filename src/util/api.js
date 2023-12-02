@@ -47,6 +47,22 @@ export const CATEGORY_API = {
   deleteCategory: baseURL + "/category/delete/",
 };
 
+export const SUB_CATEGORY_API = {
+  getAllCategory: baseURL + "/sub_category/",
+  createCategory: baseURL + "/sub_category/",
+  singleCategory: baseURL + "/sub_category/",
+  updateCategory: baseURL + "/sub_category/update/",
+  deleteCategory: baseURL + "/sub_category/delete/",
+};
+
+export const SUB_SUB_CATEGORY_API = {
+  getAllCategory: baseURL + "/sub_sub_category/",
+  createCategory: baseURL + "/sub_sub_category/",
+  singleCategory: baseURL + "/sub_sub_category/",
+  updateCategory: baseURL + "/sub_sub_category/update/",
+  deleteCategory: baseURL + "/sub_sub_category/delete/",
+};
+
 export const COMMITMENT_API = {
   createCommitment: baseURL + "/commitmentandstatement/",
   getAllCommitment: baseURL + "/commitmentandstatement/commitment",

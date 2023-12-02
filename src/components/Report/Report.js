@@ -19,6 +19,7 @@ function Report() {
           Authorization: cookies.token,
         },
       });
+      console.log("report",response)
       if (response.status === 200) return dispatch(loadReport(response.data));
     } catch (e) {
       console.warn(e);

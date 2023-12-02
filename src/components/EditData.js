@@ -75,7 +75,6 @@ const EditData = ({editableFields,fields,index,isEdit,edit_API,action,setEdit}) 
             style={{
               borderRadius: "20px",
               height: "50vh",
-              // backgroundColor: "#3C8C7E",
             }}
           >
           <img src="https://i.pinimg.com/564x/6d/6b/c9/6d6bc96fe77fe56477df38bc3993c6dc.jpg"

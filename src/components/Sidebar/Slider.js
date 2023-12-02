@@ -50,6 +50,7 @@ function Slider({ children }) {
                     </NavDropdown.Item>
                   </NavDropdown>
                   <Nav.Link href="/category">Category</Nav.Link>
+                  <Nav.Link href="/subcategory">Sub Category</Nav.Link>
                   <Nav.Link href="/keyword">Keyword</Nav.Link>
                   <NavDropdown title="Puzzle" id="basic-nav-dropdown">
                     <NavDropdown.Item href="/puzzle/add">
@@ -199,6 +200,36 @@ function Slider({ children }) {
 
               <li
                 className="nav-items text-white fs-4 p-1"
+                id="subcategory"
+                onClick={() => toggleSelect()}
+              >
+                <Link to="/subcategory" className="nav-link" area-current="page">
+                  <span className="ms-2 d-none d-sm-inline text-light h5">
+                    <i
+                      className="fas fa-clipboard-list me-3 bg-light p-2 rounded"
+                      style={{ color: "#000000" }}
+                    ></i>
+                    Subcategory
+                  </span>
+                </Link>
+              </li>
+              <li
+                className="nav-items text-white fs-4 p-1"
+                id="subsubcategory"
+                onClick={() => toggleSelect()}
+              >
+                <Link to="/subsubcategory" className="nav-link" area-current="page">
+                  <span className="ms-2 d-none d-sm-inline text-light h5">
+                    <i
+                      className="fas fa-clipboard-list me-3 bg-light p-2 rounded"
+                      style={{ color: "#000000" }}
+                    ></i>
+                    Sub-Sub-Cat..
+                  </span>
+                </Link>
+              </li>
+              <li
+                className="nav-items text-white fs-4 p-1"
                 id="keyword"
                 onClick={() => toggleSelect()}
               >
@@ -212,6 +243,7 @@ function Slider({ children }) {
                   </span>
                 </Link>
               </li>
+              
 
               <li
                 className="nav-items text-white fs-4 p-1 has-submenu "

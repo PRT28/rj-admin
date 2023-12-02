@@ -3,32 +3,32 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { loadCategory } from "../../slices/categorySlice";
-import { CATEGORY_API } from "../../util/api";
+import { loadSubCategory } from "../../slices/subcategorySlice";
+import { CATEGORY_API, SUB_SUB_CATEGORY_API } from "../../util/api";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import DataTable from "../DataTable";
-import AddCategory from "./AddCategory";
+import AddSubCategory from "./AddSubSubCategory";
 
-const Category = () => {
+const SubSubCategory = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate;
   const [cookies] = useCookies(["token"]);
   const [data, setData] = useState(null);
   const [show, setShow] = useState(false);
 
-  const categoryDelete = async (e, elem) => {
+  const subCategoryDelete = async (e, elem) => {
     try {
       const response = await axios({
         method: "delete",
-        url: CATEGORY_API.deleteCategory + `${elem._id}`,
+        url: SUB_SUB_CATEGORY_API.deleteCategory + `${elem._id}`,
         headers: {
           Authorization: cookies.token,
         },
       });
       if (response.status == 200) {
-        dispatch(loadCategory(response.data));
-        return navigate("/category");
+        dispatch(loadSubCategory(response.data));
+        return navigate("/subcategory");
       }
     } catch (error) {
       console.log(error);
@@ -39,7 +39,7 @@ const Category = () => {
     try {
       const response = await axios({
         method: "get",
-        url: CATEGORY_API.getAllCategory,
+        url: SUB_SUB_CATEGORY_API.getAllCategory,
         headers: {
           Authorization:
             // cookies.token,
@@ -47,7 +47,8 @@ const Category = () => {
         },
       });
       // Dispatch the data to the puzzleSlice to be stored in the store
-      return dispatch(loadCategory(response.data));
+     
+      return dispatch(loadSubCategory(response.data));
     } catch (e) {
       console.warn(e);
     }
@@ -61,14 +62,15 @@ const Category = () => {
 
   // get the data from the state.
   const { loading, data: categoryData } = useSelector(
-    (state) => state.category
+    (state) => state.subcategory
   );
 
   const filteredData = categoryData?.filter((data) =>
-    data.category_title.toLowerCase().startsWith(query.toLowerCase())
+    data.title.toLowerCase().startsWith(query.toLowerCase())
   );
+  console.log(filteredData)
 
-  const fields = ["category_title", "category_description"];
+  const fields = ["title", "description"];
   return (
     <div className="dashboard container vh-100">
       <div className="row h-100">
@@ -125,12 +127,12 @@ const Category = () => {
                 <DataTable
                   actualData={filteredData}
                   fields={fields}
-                  delete_func={categoryDelete}
+                  delete_func={subCategoryDelete}
                   edit_func={(e, elem) => {
                     setShow(true);
                     setData(elem);
                   }}
-                  action={loadCategory}
+                  action={loadSubCategory}
                 />
               ) : (
                 <div className="align-items-center d-flex justify-content-center pt-5">
@@ -144,7 +146,7 @@ const Category = () => {
         </div>
       </div>
       <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
-        <AddCategory setShow={setShow} fetchApi={fetchApi} data={data} />
+        <AddSubCategory setShow={setShow} fetchApi={fetchApi} data={data} />
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Close
@@ -155,4 +157,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default SubSubCategory;

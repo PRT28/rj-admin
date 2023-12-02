@@ -26,8 +26,7 @@ const DataTable = ({
   // setEditData({ ...editData, [e.target.name]: e.target.value });
   // };
 
-  const [query, setQuery] = useState("");
-
+ 
   if (edit.isEdit) {
     return (
       <EditData
@@ -44,27 +43,8 @@ const DataTable = ({
   }
   return (
     <div className="  h-100 mt-1 vh-100">
+      
       {/* Search Component  */}
-      <div className="row mt-4 mb-3 d-flex">
-        <div className="col-sm-12 align-items-center d-flex ">
-          <input
-            type="text"
-            name="searchText"
-            className="form-control shadow-lg p-2 px-3"
-            placeholder="Search names here.."
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "#5D5D5D",
-              color: "#FFF",
-            }}
-            onChange={(e) => setQuery(e.target.value)}
-            value={query}
-          />
-        </div>
-      </div>
-
       {/* Data Table */}
       <div className="overflow-auto">
         <table className=" table" style={{ border: "1px solid white" }}>
@@ -103,11 +83,7 @@ const DataTable = ({
               </thead>
               <tbody>
                 {/* Displaying Data */}
-                {Data.filter(
-                  (elem, index) =>
-                    elem &&
-                    elem.username.toLowerCase().startsWith(query.toLowerCase())
-                ).map((elem, index) => {
+                {Data.map((elem, index) => {
                   return (
                     <tr key={index}>
                       {/* Map data through Fields so that every field gets mapped even though response data doesh't contain them */}

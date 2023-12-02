@@ -1,0 +1,5 @@
+FRONTEND ISSUES:
+  - USER:
+      - While filtering according to the role the user gets redirected to another page. Still not sure what could be the behaviour of the app.
+  -JOY PAGE : 
+      - Giving errors when we select any image from our local setup
