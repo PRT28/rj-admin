@@ -86,20 +86,26 @@ const Statement = () => {
 
     if (data) {
       try {
+        console.log("dadsadsdsabdjkiiihih", data);
         if (
-          statement.category_text === "" ||
-          statement.suggestion_text === ""
+          data.commitment_text === "" ||
+          data.commitment_statement === "" ||
+          data.id === "" ||
+          !data.id
         ) {
           alert("Make sure to write a text and select a catgory");
           return;
         }
         const response = await axios({
           method: "put",
-          url: `${STATEMENT_API.updateStatement}/${data._id}`,
+          url: `${STATEMENT_API.updateStatement}/${data.id}`,
           headers: {
             Authorization: cookies.token,
           },
-          data: statement,
+          data: {
+            commitment_statement: data.commitment_statement,
+            commitment_text: data.commitment_text,
+          },
         });
 
         setStatement({
@@ -276,6 +282,14 @@ const Statement = () => {
               //   component: "commitment",
               //   editArray: ["suggestion_text"],
               // }}
+              edit_func={(e, elem) => {
+                setShow(true);
+                setData({
+                  commitment_statement: elem.suggestion_text,
+                  commitment_text: elem.category_text,
+                  id: elem._id,
+                });
+              }}
             />
           ) : (
             <div className="align-items-center d-flex justify-content-center pt-5">
@@ -294,12 +308,12 @@ const Statement = () => {
             </label>
             <input
               type="text"
-              name="suggestion_text"
+              name="commitment_statement"
               id="form3Example3"
-              value={data?.suggestion_text}
+              value={data?.commitment_statement}
               onChange={(e) =>
-                setStatement({
-                  ...statement,
+                setData({
+                  ...data,
                   [e.target.name]: e.target.value,
                 })
               }
@@ -316,12 +330,16 @@ const Statement = () => {
               <select
                 className="form-control form-control-lg border-1 border-dark"
                 onChange={(e) =>
-                  setStatement({ ...statement, category_text: e.target.value })
+                  setData({ ...data, commitment_text: e.target.value })
                 }
+                value={data?.category_title}
               >
                 {categoryData.map((d) => (
-                  <option selected={data?.category_title === d.category_title}>
-                    {d.category_title}
+                  <option
+                    value={d.category_title}
+                    selected={data?.category_title === d.category_title}
+                  >
+                    {d?.category_title}
                   </option>
                 ))}
               </select>

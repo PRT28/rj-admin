@@ -76,7 +76,8 @@ function ManageJoy() {
               <DataTable
                 actualData={joyData}
                 fields={fields}
-                delete_func={joyDelete}
+                delete_func={()=>{}}
+                edit_func={()=>{}}
                 editableFields={[""]}
               />
             ) : (

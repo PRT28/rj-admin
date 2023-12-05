@@ -86,16 +86,13 @@ const Commitment = () => {
 
     if (data) {
       try {
-        if (
-          commitment.category_text === "" ||
-          commitment.suggestion_text === ""
-        ) {
+        if (data.category_id === "" || data.suggestion_text === "") {
           alert("Make sure to write a text and select a catgory");
           return;
         }
         const response = await axios({
           method: "put",
-          url: `${COMMITMENT_API.updateCommitment}/${data._id}`,
+          url: `${COMMITMENT_API.updateCommitment}/${data.id}`,
           headers: {
             Authorization: cookies.token,
           },
@@ -107,8 +104,9 @@ const Commitment = () => {
             suggestion_text: "",
             category_text: "",
           });
-          dispatch(loadCommitment(response.data));
-          fetchCommitment();
+          // dispatch(loadCommitment(response.data));
+          await fetchCommitment();
+
           setShow(false);
           setData(null);
           return;
@@ -274,7 +272,11 @@ const Commitment = () => {
               action={loadCommitment}
               edit_func={(e, elem) => {
                 setShow(true);
-                setData(elem);
+                setData({
+                  commitment_statement: elem.suggestion_text,
+                  commitment_text: elem.category_text,
+                  id: elem._id,
+                });
               }}
             />
           ) : (
@@ -294,12 +296,12 @@ const Commitment = () => {
             </label>
             <input
               type="text"
-              name="suggestion_text"
+              name="commitment_statement"
               id="form3Example3"
-              value={data?.suggestion_text}
+              value={data?.commitment_statement}
               onChange={(e) =>
-                setCommitment({
-                  ...commitment,
+                setData({
+                  ...data,
                   [e.target.name]: e.target.value,
                 })
               }
@@ -314,18 +316,18 @@ const Commitment = () => {
                 Category
               </label>
               <select
-                value={commitment.category_text}
                 className="form-control form-control-lg border-1 border-dark"
                 onChange={(e) =>
-                  setCommitment({
-                    ...commitment,
-                    category_text: e.target.value,
-                  })
+                  setData({ ...data, commitment_text: e.target.value })
                 }
+                value={data?.category_title}
               >
                 {categoryData.map((d) => (
-                  <option selected={data?.category_title === d.category_title}>
-                    {d.category_title}
+                  <option
+                    value={d.category_title}
+                    selected={data?.category_title === d.category_title}
+                  >
+                    {d?.category_title}
                   </option>
                 ))}
               </select>

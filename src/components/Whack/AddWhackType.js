@@ -8,7 +8,7 @@ const AddWhackType = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const propData = location.state;
-
+console.log(propData)
   const [cookies] = useCookies(["token"]);
 
   const [wackFile, setWackFile] = useState();
@@ -44,7 +44,7 @@ const AddWhackType = () => {
         // Common Data
         name: wackData.name,
         description: wackData.description,
-        category_name: wackData.category_name,
+        category_id: wackData.category_id,
         asset_type: wackData.asset_type,
         keyword_name: wackData.keyword_name,
         asset_category: wackData.asset_category,

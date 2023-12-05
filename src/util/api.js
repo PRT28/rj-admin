@@ -67,14 +67,14 @@ export const COMMITMENT_API = {
   createCommitment: baseURL + "/commitmentandstatement/",
   getAllCommitment: baseURL + "/commitmentandstatement/commitment",
   deleteCommitment: baseURL + "/commitmentandstatement/delete",
-  updateCommitment: baseURL + "commitmentandstatement/update"
+  updateCommitment: baseURL + "/commitmentandstatement/update"
 };
 
 export const STATEMENT_API = {
   createStatement: baseURL + "/commitmentandstatement/",
   getAllStatement: baseURL + "/commitmentandstatement/statement",
   deleteStatment: baseURL + "/commitmentandstatement/delete",
-  updateStatement: baseURL + "commitmentandstatement/update"
+  updateStatement: baseURL + "/commitmentandstatement/update"
 };
 
 export const REPORT_API = {

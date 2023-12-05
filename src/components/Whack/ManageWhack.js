@@ -77,7 +77,8 @@ function ManageWhack() {
               <DataTable
                 actualData={wackData}
                 fields={fields}
-                delete_func={wackDelete}
+                delete_func={()=>{}}
+                edit_func={()=>{}}
                 editableFields={[""]}
               />
             ) : (
