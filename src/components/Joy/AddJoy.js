@@ -34,8 +34,8 @@ const AddJoy = () => {
     keyword_name: [],
     asset_category: 1,
     is_announcemnet: false,
-    sub_category_id: "dsad",
-    sub_sub_category_id: "dsdas",
+    sub_category_id: "",
+    sub_sub_category_id: "",
     // 0- Asset, 1- Joy, 2- Whack
   });
 
@@ -96,11 +96,15 @@ const AddJoy = () => {
 
   // Handle the Form Data Change
   const handleChange = (e) => {
+    console.log(joyData,e.target.name);
     let value = StringValidate(e.target.value);
 
-    setJoyData({
-      ...joyData,
-      [e.target.name]: e.target.name !== "description" ? value : e.target.value,
+    setJoyData((joyData) => {
+      return {
+        ...joyData,
+        [e.target.name]:
+          e.target.name !== "description" ? value : e.target.value,
+      };
     });
   };
 
@@ -146,7 +150,7 @@ const AddJoy = () => {
       // 1-Joy 2-Wack
     });
   };
-  console.log(joyData);
+  console.log(subSubCategory);
   const joyType = ["video", "audio", "gif"];
 
   return (
@@ -212,7 +216,7 @@ const AddJoy = () => {
               </div>
 
               <div className="form-outline mb-3 ">
-                <label className="form-label h5" htmlFor="category">
+                <label className="form-label h5" htmlFor="subCategory">
                   SubCategory
                 </label>
                 <div className="w-100">
@@ -245,10 +249,10 @@ const AddJoy = () => {
                 </label>
                 <div className="w-100">
                   <select
-                    id="category"
+                    id="subcategory"
                     className="w-100 p-2 border-dark"
                     style={{ borderRadius: "15px", color: "black" }}
-                    name="category_id"
+                    name="sub_sub_category_id"
                     value={joyData.sub_sub_category_id}
                     onChange={(e) => handleChange(e)}
                   >

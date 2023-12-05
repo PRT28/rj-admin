@@ -9,6 +9,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Register from "./Auth/Register";
+import { jwtDecode } from "jwt-decode";
 
 function User() {
   const [cookies] = useCookies(["token"]);
@@ -17,6 +18,8 @@ function User() {
   const [data, setData] = useState(null);
   const [show, setShow] = useState(false);
 
+  const admin = jwtDecode(cookies.token).user;
+  console.log("dsdas", admin);
   const fetchApi = async () => {
     try {
       const response = await axios({
@@ -26,7 +29,6 @@ function User() {
           Authorization: cookies.token,
         },
       });
-
       if (response.status === 200) return dispatch(loadUser(response.data));
     } catch (e) {
       console.warn(e);
@@ -42,6 +44,7 @@ function User() {
           Authorization: cookies.token,
         },
       });
+
       if (response.status === 200) return dispatch(loadUser(response.data));
     } catch (e) {
       console.warn(e);
@@ -54,7 +57,6 @@ function User() {
 
   useEffect(() => {
     fetchApi();
-    console.log("hii")
   }, [dispatch]);
 
   const [query, setQuery] = useState("");
@@ -63,7 +65,6 @@ function User() {
   const { loading, data: userData } = useSelector((state) => state.user);
   const { data: adminData } = useSelector((state) => state.admin);
   const fields = ["username", "email", "status", "zip_code", "gender", "role"];
-
   const filteredData = userData?.filter((data) =>
     data.username.toLowerCase().startsWith(query.toLowerCase())
   );
@@ -94,7 +95,7 @@ function User() {
               <Dropdown.Item href="#/action-3">Role 3</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          {adminData.role === 0 && (
+          {admin.role === 0 && (
             <button
               type="button"
               className="btn btn-light btn-lg border-2 px-5"
@@ -157,11 +158,22 @@ function User() {
           )}
         </div>
       </div>
-      <Modal show={show} fullscreen={true} onHide={() => setShow(false)}>
+      <Modal
+        show={show}
+        fullscreen={true}
+        onHide={() => {
+          setShow(false);
+          setData(null);
+        }}
+      >
         <Register
           closeModal={closeModal}
           fetchUsers={fetchApi}
-          loadRegister={setShow}
+          loadRegister={(val) => {
+            setShow(val);
+            setData(null);
+            fetchApi()
+          }}
           data={data}
         />
       </Modal>

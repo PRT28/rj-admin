@@ -38,7 +38,7 @@ const AddWhack = () => {
     sub_sub_category_id: "dsdas",
     // 0- Asset, 1- Joy, 2- Whack
   });
-
+  console.log(whackData);
   const handleSetAnnouncement = () => {
     setwhackData({ ...whackData, is_announcemnet: !whackData.is_announcemnet });
   };
@@ -128,7 +128,6 @@ const AddWhack = () => {
 
     // regex to check for any unusual pattern or palyoad
     const stringPattern = /^(?!.*__)[a-zA-Z0-9_]+$/;
-
     navigate("/whack/add/type", {
       state: { ...whackData, keyword_name: selectedKeywords },
     });
@@ -151,7 +150,9 @@ const AddWhack = () => {
   return (
     <div className="dashboard container mb-5 vh-100">
       <div className="nav-items fs-4 pb-3">
-        <span className="d-none text-sm text-dark d-sm-inline h5">Add Whack</span>
+        <span className="d-none text-sm text-dark d-sm-inline h5">
+          Add Whack
+        </span>
       </div>
       <div className="flex-row ">
         <div
@@ -247,7 +248,7 @@ const AddWhack = () => {
                     id="category"
                     className="w-100 p-2 border-dark"
                     style={{ borderRadius: "15px", color: "black" }}
-                    name="category_id"
+                    name="sub_sub_category_id"
                     value={whackData.sub_sub_category_id}
                     onChange={(e) => handleChange(e)}
                   >

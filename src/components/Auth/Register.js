@@ -4,6 +4,7 @@ import { AUTH_API } from "../../util/api";
 import { useDispatch } from "react-redux";
 import { loadAdmin } from "../../slices/adminSlice";
 import { useCookies } from "react-cookie";
+import { jwtDecode } from "jwt-decode";
 import { Button } from "react-bootstrap";
 
 function Register({ loadRegister, data, fetchUsers, closeModal }) {
@@ -14,7 +15,7 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
     username: data ? data.username : "",
     email: data ? data.email : "",
     password: data ? data.password : "",
-    gender: data ? data.gender : "",
+    gender: data ? data?.gender : "other",
     zip_code: data ? data.zip_code : "",
     role: 1,
   });
@@ -31,13 +32,15 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
       [name]: name === "zip_code" ? numericValue : e.target.value,
     });
   };
+  const admin = jwtDecode(cookies.token).user;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(registerData);
     setLoading(true);
 
     if (data) {
+      if (data.role < admin.role)
+        alert("You cant modify admins above or equal your hierarchy");
       try {
         const response = await axios({
           method: "patch",
@@ -48,31 +51,31 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
           },
         });
         console.log(response);
-        if (response.status === 201) {
-          // dispatch(loadAdmin(response.data._doc));
-          // setCookie('token',response.data.tokeconsole.log(e);n);
-          await fetchUsers();
-          setLoading(false);
-          loadRegister(false);
-        }
+
+        // dispatch(loadAdmin(response.data._doc));
+        // setCookie('token',response.data.tokeconsole.log(e);n);
+        await fetchUsers();
+        setLoading(false);
+        loadRegister(false);
       } catch (e) {
         setLoading(false);
         setError(e);
       }
     } else {
       try {
+        if (registerData.role <= admin.role)
+          alert("You cant modify admins above or equal your hierarchy");
         const response = await axios({
           method: "post",
           url: AUTH_API.register,
           data: registerData,
         });
 
-        if (response.status === 201) {
-          dispatch(loadAdmin(response.data._doc));
-          // setCookie('token',response.data.tokeconsole.log(e);n);
-          setLoading(false);
-          loadRegister(false);
-        }
+        dispatch(loadAdmin(response.data._doc));
+        // setCookie('token',response.data.tokeconsole.log(e);n);
+        setLoading(false);
+
+        loadRegister(false);
       } catch (e) {
         setLoading(false);
         setError(e);
@@ -130,6 +133,20 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
               required={true}
             />
           </div>
+          <div className="form-outline mb-4">
+            <label className="form-label" htmlFor="email">
+              Role
+            </label>
+            <input
+              type="number"
+              name="role"
+              id="role"
+              className="form-control form-control-lg"
+              value={registerData.role}
+              onChange={(e) => handleChange(e)}
+              required={true}
+            />
+          </div>
           <label className="form-label" htmlFor="password">
             Password
           </label>
@@ -152,7 +169,7 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
                 name="gender"
                 id="femaleGender"
                 value="female"
-                defaultChecked={data.gender.toLowerCase() === "female"}
+                defaultChecked={data?.gender?.toLowerCase() === "female"}
                 onChange={(e) => handleChange(e)}
               />
               <label className="form-check-label" htmlFor="femaleGender">
@@ -167,7 +184,7 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
                 name="gender"
                 id="maleGender"
                 value="male"
-                defaultChecked={data.gender.toLowerCase() === "male"}
+                defaultChecked={data?.gender?.toLowerCase() === "male"}
                 onChange={(e) => handleChange(e)}
               />
               <label className="form-check-label" htmlFor="maleGender">
@@ -183,8 +200,8 @@ function Register({ loadRegister, data, fetchUsers, closeModal }) {
                 id="otherGender"
                 value="other"
                 defaultChecked={
-                  data.gender.toLowerCase() !== "male" ||
-                  data.gender.toLowerCase() !== "female"
+                  data?.gender?.toLowerCase() !== "male" ||
+                  data?.gender?.toLowerCase() !== "female"
                 }
                 onChange={(e) => handleChange(e)}
               />
