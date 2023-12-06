@@ -20,6 +20,8 @@ const AddJoy = () => {
   const [subSubCategory, setSubSubCategory] = useState([]);
   const [keyword, setKeyword] = useState([]);
 
+  const [file, setFile] = useState(null);
+
   // State for the Checked Input
   const [checkedState, setCheckedState] = useState(0);
   const [selectedKeywords, setSelectedKeywords] = useState([]);

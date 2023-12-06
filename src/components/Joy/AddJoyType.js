@@ -23,6 +23,7 @@ const AddJoyType = () => {
   // Handle the File Upload
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(file)
     setJoyFile(file);
   };
 
@@ -38,7 +39,7 @@ const AddJoyType = () => {
   // Handle Complete Joy Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(joyData);
+    console.log(joyFile);
     // Form Payload to send
     let formPayload;
     if (joyData.upload_type == 0) {
@@ -58,21 +59,18 @@ const AddJoyType = () => {
         url: joyData.url,
       };
     } else {
-      formPayload = {
-        // Common Data
-        name: joyData.name,
-        description: joyData.description,
-        category_id: joyData.category_id,
-        asset_type: joyData.asset_type,
-        keyword_name: joyData.keyword_name,
-        asset_category: joyData.asset_category,
-        is_announcemnet: joyData.is_announcemnet,
-        sub_category_id: joyData.sub_category_id,
-        sub_sub_category_id: joyData.sub_sub_category_id,
-        // Specific Data
-        upload_type: 1,
-        url: joyFile,
-      };
+      formPayload = new FormData();
+      formPayload.append('name', joyData.name)
+      formPayload.append('description', joyData.description)
+      formPayload.append('category_id', joyData.category_id)
+      formPayload.append('asset_type', joyData.asset_type)
+      formPayload.append('keyword_name', joyData.keyword_name)
+      formPayload.append('asset_category', joyData.asset_category)
+      formPayload.append('is_announcemnet', joyData.is_announcemnet)
+      formPayload.append('sub_category_id', joyData.sub_category_id)
+      formPayload.append('sub_sub_category_id', joyData.sub_sub_category_id)
+      formPayload.append('upload_type', 1)
+      formPayload.append('url', joyFile)
     }
 
     // Send request to the API
@@ -82,6 +80,7 @@ const AddJoyType = () => {
         method: "post",
         url: JOY_API.createJoy,
         headers: {
+          'Content-Type': 'multipart/form-data',
           Authorization: cookies.token,
         },
         data: formPayload,
@@ -135,7 +134,7 @@ const AddJoyType = () => {
                       Url
                     </option>
                     <option value={1} key={"upload"}>
-                      Uplaod
+                      Upload
                     </option>
                   </select>
                 </div>
@@ -173,7 +172,6 @@ const AddJoyType = () => {
                         type="file"
                         name="joyFile"
                         id="upload"
-                        value={joyFile}
                         onChange={(e) => handleFileChange(e)}
                       />
                     </div>

@@ -12,20 +12,7 @@ function ManageJoy() {
 
   const { data: adminData } = useSelector((state) => state.admin);
 
-  const joyDelete = async (e, elem) => {
-    try {
-      const response = await axios({
-        method: "delete",
-        url: JOY_API.deleteJoy + `${elem._id}`,
-        data: {
-          user_id: adminData._id,
-        },
-      });
-      if (response.status === 200) return dispatch(loadJoy(response.data));
-    } catch (err) {
-      console.log(err, err.response);
-    }
-  };
+  
 
   const fetchApi = async () => {
     try {
@@ -44,6 +31,30 @@ function ManageJoy() {
       console.warn(e);
     }
   };
+
+  const joyDelete = async (e, elem) => {
+    try {
+      const response = await axios({
+        method: "delete",
+        url: JOY_API.deleteJoy + `${elem._id}`,
+        data: {
+          user_id: adminData._id,
+        },
+        headers: {
+          Authorization:
+            // cookies.token,
+            cookies.token,
+        }
+      });
+      if (response.status === 200) {
+        window.alert(response.data.message);
+        return dispatch(fetchApi());
+      }
+    } catch (err) {
+      console.log(err, err.response);
+    }
+  };
+
   useEffect(() => {
     fetchApi();
   }, [dispatch]);
@@ -55,11 +66,8 @@ function ManageJoy() {
   const fields = [
     "name",
     "url",
-    "asset_type",
-    "isActive",
+    "asset_category",
     "keyword_name",
-    "like_count",
-    "share_count",
   ];
 
   return (
@@ -76,9 +84,8 @@ function ManageJoy() {
               <DataTable
                 actualData={joyData}
                 fields={fields}
-                delete_func={()=>{}}
+                delete_func={joyDelete}
                 edit_func={()=>{}}
-                editableFields={[""]}
               />
             ) : (
               <div className="align-items-center d-flex justify-content-center pt-5">

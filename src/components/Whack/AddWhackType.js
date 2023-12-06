@@ -56,22 +56,20 @@ console.log(propData)
         url: wackData.url,
       };
     } else {
-      formPayload = {
-        // Common Data
-        name: wackData.name,
-        description: wackData.description,
-        category_name: wackData.category_name,
-        asset_type: wackData.asset_type,
-        keyword_name: wackData.keyword_name,
-        asset_category: wackData.asset_category,
-        is_announcemnet: wackData.is_announcemnet,
-        sub_category_id: wackData.sub_category_id,
-        sub_sub_category_id: wackData.sub_sub_category_id,
-        // Specific Data
-        upload_type: 1,
-        url: wackFile,
-      };
+      formPayload = new FormData();
+      formPayload.append('name', wackData.name)
+      formPayload.append('description', wackData.description)
+      formPayload.append('category_id', wackData.category_id)
+      formPayload.append('asset_type', wackData.asset_type)
+      formPayload.append('keyword_name', wackData.keyword_name)
+      formPayload.append('asset_category', wackData.asset_category)
+      formPayload.append('is_announcemnet', wackData.is_announcemnet)
+      formPayload.append('sub_category_id', wackData.sub_category_id)
+      formPayload.append('sub_sub_category_id', wackData.sub_sub_category_id)
+      formPayload.append('upload_type', 1)
+      formPayload.append('url', wackFile)
     }
+    
     // Send request to the API
     try {
       console.log("dsadas", formPayload);
@@ -79,6 +77,7 @@ console.log(propData)
         method: "post",
         url: WACK_API.createWack,
         headers: {
+          'Content-Type': 'multipart/form-data',
           Authorization: cookies.token,
         },
         data: formPayload,
