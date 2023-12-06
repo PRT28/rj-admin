@@ -172,7 +172,6 @@ console.log(propData)
                         type="file"
                         name="wackFile"
                         id="upload"
-                        value={wackFile}
                         onChange={(e) => handleFileChange(e)}
                       />
                     </div>
